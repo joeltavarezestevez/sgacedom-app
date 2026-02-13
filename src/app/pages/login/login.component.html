@@ -1,0 +1,56 @@
+<ion-content class="login-background" fullscreen>
+  <div class="overlay">
+    <div class="login-wrapper">
+
+      <!-- Texto institucional -->
+      <div class="brand-header">
+        <img src="assets/img/logo.png" alt="Logo SGACEDOM" alt="Logo SGACEDOM" class="brand-logo" />
+        <h1 class="brand-title">SGACEDOM APP</h1>
+        <p class="brand-subtitle">
+          Sociedad General de Autores, Compositores y Editores Dominicanos de Música, Inc.
+        </p>
+      </div>    
+      <div class="login-container">
+
+        <form (ngSubmit)="login()" #loginForm="ngForm" (keypress.enter)="login()">
+          <ion-item>
+            <ion-label position="floating">N&uacute;mero de Socio</ion-label>
+            <ion-input
+            type="text"
+            required
+            [(ngModel)]="credentials.socio"
+            name="socio"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input
+            type="password"
+            required
+            [(ngModel)]="credentials.password"
+            name="password"
+            ><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
+          </ion-item>
+          <ion-row>
+            <ion-col [size]="getBiometricCredentials() ? 9 : 12">
+              <ion-button expand="block" type="submit" [disabled]="!loginForm.valid" class="ion-margin-top ion-text-uppercase">
+                Ingresar
+                <ion-icon slot="end" name="log-in-outline" size="medium"></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col size="3">
+              <ion-button *ngIf="getBiometricCredentials()" (click)="loginWithBiometrics()" expand="block" class="ion-margin-top ion-no-padding" fill="clear">
+                <ion-icon name="finger-print-outline" size="large"></ion-icon>
+              </ion-button>          
+            </ion-col>
+          </ion-row>
+        </form>
+
+        <ion-text color="medium" class="forgot-password" (click)="recuperarClave()">
+          ¿Olvidaste tu contraseña?
+        </ion-text>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,163 @@
+<sg-header title="Mi Perfil"></sg-header>
+
+<ion-content class="ion-padding">
+	<ion-item lines="none" class="ion-padding" detail="false">
+		<div class="foto-container">
+			<img [src]="perfil.foto || 'assets/img/user.png'" alt="Foto de perfil" class="foto-preview" (click)="verImagen(perfil.foto)" />
+			<input type="file" #fileInput accept="image/*" (change)="onFotoSelected($event)" hidden>
+			<ion-button size="small" fill="outline" (click)="fileInput.click()">
+				<ion-icon slot="start" name="camera"></ion-icon>
+				Cambiar foto
+			</ion-button>
+		</div>
+	</ion-item>
+	<ion-item-divider color="light">
+		<ion-label><strong>Datos Personales</strong></ion-label>
+	</ion-item-divider>  	
+	<ion-item>
+		<ion-input class="readonly" label="Numero de Socio" [(ngModel)]="perfil.numero_socio" required readonly="readonly"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-input class="readonly" label="Nombre" [(ngModel)]="perfil.name" required readonly="readonly"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-input class="readonly" label="Apellido(s)" [(ngModel)]="perfil.lastname" required readonly="readonly"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-input label="Seudonimo" [(ngModel)]="perfil.seudonimo"></ion-input>
+	</ion-item> 
+	<ion-item>
+		<ion-input label="Nombre del Conyuge" [(ngModel)]="perfil.nom_conyuge"></ion-input>
+	</ion-item> 	 
+	<ion-item>
+		<ion-input label="Codigo IPI" [(ngModel)]="perfil.ipi" ></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-select label="Tipo de Identificación" [(ngModel)]="perfil.identdoc">
+			<ion-select-option value="C">Cédula</ion-select-option>
+			<ion-select-option value="P">Pasaporte</ion-select-option>
+		</ion-select>
+	</ion-item>
+
+	<ion-item *ngIf="perfil.identdoc == 'C'">
+		<ion-input label="Número de Identificación" type="text" [(ngModel)]="perfil.cedula"></ion-input>
+	</ion-item>
+
+	<ion-item *ngIf="perfil.identdoc == 'P'">
+		<ion-input label="Número de Identificación" type="text" [(ngModel)]="perfil.pasaporte"></ion-input>
+	</ion-item>	
+
+	<ion-item>
+		<ion-input label="Teléfono" type="tel" [(ngModel)]="perfil.telefono" (ionBlur)="perfil.telefono = formatearCampo(perfil.telefono, 'telefono')"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-input label="Celular" type="tel" [(ngModel)]="perfil.celular" (ionBlur)="perfil.celular = formatearCampo(perfil.celular, 'telefono')"></ion-input>
+	</ion-item>	
+	<ion-item>
+		<ion-input label="Correo electrónico" type="email" [(ngModel)]="perfil.email" required></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-input label="Dirección" [(ngModel)]="perfil.direccion"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-input label="Sector" [(ngModel)]="perfil.sector"></ion-input>
+	</ion-item>    
+	<ion-item>
+		<ion-select label="Provincia" [(ngModel)]="perfil.provincia" (ionChange)="onProvinciaChange()">
+			<ion-select-option *ngFor="let p of provincias" [value]="p.id">
+				{{ p.nombre }}
+			</ion-select-option>
+		</ion-select>
+	</ion-item>
+
+	<ion-item *ngIf="municipiosSeleccionados">
+		<ion-select label="Municipio" [(ngModel)]="perfil.municipio">
+			<ion-select-option *ngFor="let m of municipiosSeleccionados" [value]="m.id">
+				{{ m.nombre }}
+			</ion-select-option>
+		</ion-select>
+	</ion-item>
+
+	<ion-item-divider color="light">
+		<ion-label><strong>Datos Demográficos</strong></ion-label>
+	</ion-item-divider> 
+	<ion-item>
+		<ion-select label="Género" [(ngModel)]="perfil.genero">
+			<ion-select-option value="M">Masculino</ion-select-option>
+			<ion-select-option value="F">Femenino</ion-select-option>
+			<ion-select-option value="O">Otro</ion-select-option>
+		</ion-select>
+	</ion-item>
+	<ion-item>
+		<ion-select label="Nacionalidad" [(ngModel)]="perfil.nacionalidad">
+			<ion-select-option *ngFor="let n of listaNacionalidades" [value]="n.id">
+				{{ n.nombre }}
+			</ion-select-option>
+		</ion-select>
+	</ion-item>
+	<ion-item>
+		<ion-select label="Estado Civil" [(ngModel)]="perfil.estado_civil">
+			<ion-select-option [value]="1">Soltero/a</ion-select-option>
+			<ion-select-option [value]="2">Casado/a</ion-select-option>
+			<ion-select-option [value]="3">Unión libre</ion-select-option>
+			<ion-select-option [value]="4">Divorciado/a</ion-select-option>
+			<ion-select-option [value]="5">Viudo/a</ion-select-option>
+		</ion-select>		
+	</ion-item>
+	<ion-item>
+		<ion-input label="Fecha de Nacimiento" type="date" [(ngModel)]="perfil.fec_nacimiento"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-select label="Lugar de Nacimiento" [(ngModel)]="perfil.lug_nacimiento">
+			<ion-select-option *ngFor="let lugar of listaLugaresNacimiento" [value]="lugar.id">
+				{{ lugar.nombre }}
+			</ion-select-option>
+		</ion-select>
+	</ion-item>		 	
+	<ion-item-divider color="light">
+		<ion-label><strong>Asignación de Herederos</strong></ion-label>
+	</ion-item-divider>
+	<ion-list>
+		<ion-item>
+			<ion-input label="Fecha de Fallecimiento" type="date" [(ngModel)]="perfil.fechaFallecimiento"></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-toggle [(ngModel)]="perfil.heredero"><strong>¿Desea Asignar Heredero?</strong></ion-toggle>
+		</ion-item>
+		<ng-container *ngIf="perfil.heredero">
+			<ion-item>
+				<ion-input placeholder="Nombre" [(ngModel)]="perfil.heredero_data.her_nom"></ion-input>
+				<ion-input placeholder="Telefono" type="tel" [(ngModel)]="perfil.heredero_data.her_tel"></ion-input>
+				<ion-input placeholder="Direccion" [(ngModel)]="perfil.heredero_data.her_dir"></ion-input>
+			</ion-item>
+		</ng-container>	     		  		
+	</ion-list>
+
+	<ion-item-divider color="light">
+		<ion-label><strong>Sociedades</strong></ion-label>
+	</ion-item-divider>
+	<ion-list>
+		<ion-item>
+			<ion-toggle [(ngModel)]="perfil.otra_sociedad"><strong>¿Desea Asignar Sociedades?</strong></ion-toggle>
+		</ion-item>
+		<ng-container *ngIf="perfil.otra_sociedad">	    	
+			<ion-item >
+				<ion-input placeholder="Nombre" [(ngModel)]="perfil.sociedad_data.soc_nom"></ion-input>
+				<ion-input placeholder="Ubicación" [(ngModel)]="perfil.sociedad_data.soc_ubi"></ion-input>
+			</ion-item>
+		</ng-container>
+	</ion-list>
+	<h2 class="ion-margin-top">Cambio de Contraseña</h2>
+	<ion-item>
+		<ion-input type="password" label="Contraseña actual" [(ngModel)]="passwordForm.current"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-input type="password" label="Nueva contraseña" [(ngModel)]="passwordForm.new"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-input type="password" label="Confirmar contraseña" [(ngModel)]="passwordForm.confirm"></ion-input>
+	</ion-item>
+
+	<ion-button expand="block" class="ion-margin-top" (click)="guardarPerfil()">Guardar</ion-button>
+
+</ion-content>

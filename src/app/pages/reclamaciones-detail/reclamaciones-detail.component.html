@@ -1,0 +1,165 @@
+<sg-header title="Detalle de Reclamación"></sg-header>
+
+<ion-content class="ion-padding" color="light">
+  <ion-card *ngIf="reclamacion; else sinDatos">
+    <ion-card-header>
+          <ion-card-title>Información General</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Título(s) de la obra(s)</ion-label>
+        <ion-text>{{ reclamacion.titulos }}</ion-text>
+      </ion-item>  
+      <ion-item>
+        <ion-label>Fecha</ion-label>
+        <ion-text>{{ reclamacion.created_at | date:'longDate' }}</ion-text>
+      </ion-item>            
+      <ion-item>
+        <ion-label>Estado</ion-label>
+        <ion-text>
+          <ion-badge
+            [color]="estadoColorMap[+reclamacion.estado]"
+            class="ion-text-capitalize"
+          >
+            {{ estadoTextoMap[+reclamacion.estado] }}
+          </ion-badge>
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label>Motivo</ion-label>
+        <ion-text>{{ reclamacion.motivo_nombre }}</ion-text>
+      </ion-item>  
+      <ion-item lines="none">
+        <ion-label><strong>Mensaje</strong></ion-label>
+      </ion-item>        
+        <ion-item lines="none">
+          <ion-label>{{ reclamacion.mensaje }}</ion-label>
+        </ion-item>      
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Información general -->
+  <ion-card>      
+    <ion-card-header>
+      <ion-card-title>Medio(s) de Divulgación</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item-group *ngIf="reclamacion.concierto">
+        <ion-item-divider color="light"><strong>Concierto donde fue divulgada</strong></ion-item-divider>
+        <ion-item *ngIf="reclamacion.sala">
+          <ion-label>Sala</ion-label>
+          <ion-text>{{ reclamacion.sala }}</ion-text>
+        </ion-item>
+        <ion-item *ngIf="reclamacion.lugar">
+          <ion-label>Lugar</ion-label>
+          <ion-text>{{ reclamacion.lugar }}</ion-text>
+        </ion-item>
+        <ion-item *ngIf="reclamacion.pais">
+          <ion-label>País</ion-label>
+          <ion-text>{{ reclamacion.pais }}</ion-text>
+        </ion-item>
+        <ion-item *ngIf="reclamacion.telefono">
+          <ion-label>Teléfono</ion-label>
+          <ion-text>{{ reclamacion.telefono }}</ion-text>
+        </ion-item>
+      </ion-item-group>
+
+      <ion-item-group *ngIf="reclamacion.radio">
+        <ion-item-divider color="light"><strong>Programa y/o emisora de radio donde fue divulgada</strong></ion-item-divider>
+        <ion-item *ngIf="reclamacion.rsala">
+          <ion-label>Emisora</ion-label>
+          <ion-text>{{ reclamacion.rsala }}</ion-text>
+        </ion-item>
+        <ion-item *ngIf="reclamacion.rlugar">
+          <ion-label>Programa</ion-label>
+          <ion-text>{{ reclamacion.rlugar }}</ion-text>
+        </ion-item>
+        <ion-item *ngIf="reclamacion.rpais">
+          <ion-label>País</ion-label>
+          <ion-text>{{ reclamacion.rpais }}</ion-text>
+        </ion-item>
+        <ion-item *ngIf="reclamacion.rtelefono">
+          <ion-label>Teléfono</ion-label>
+          <ion-text>{{ reclamacion.rtelefono }}</ion-text>
+        </ion-item>        
+      </ion-item-group>
+
+      <ion-item-group *ngIf="reclamacion.tv">
+        <ion-item-divider color="light"><strong>Programa y/o planta televisora donde fue divulgada</strong></ion-item-divider>
+        <ion-item *ngIf="reclamacion.tvcompania">
+          <ion-label>Compañía</ion-label>
+          <ion-text>{{ reclamacion.tvcompania }}</ion-text>
+        </ion-item>
+        <ion-item *ngIf="reclamacion.tvprograma">
+          <ion-label>Programa</ion-label>
+          <ion-text>{{ reclamacion.tvprograma }}</ion-text>
+        </ion-item>
+        <ion-item *ngIf="reclamacion.tvpais">
+          <ion-label>País</ion-label>
+          <ion-text>{{ reclamacion.tvpais }}</ion-text>
+        </ion-item>
+        <ion-item *ngIf="reclamacion.tvspot">
+          <ion-label>Teléfono</ion-label>
+          <ion-text>{{ reclamacion.tvspot }}</ion-text>
+        </ion-item>        
+      </ion-item-group>
+
+      <ion-item-group *ngIf="reclamacion.cd || reclamacion.cassette || reclamacion.video || reclamacion.otros">
+        <ion-item-divider color="light"><strong>Otros Formatos</strong></ion-item-divider>
+        <ion-row>
+          <ion-col size="6"*ngIf="reclamacion.cd">
+            <ion-item lines="none">
+              <ion-label>📀 CD</ion-label>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6"*ngIf="reclamacion.cassette">
+            <ion-item lines="none">
+              <ion-label>📼 Cassette</ion-label>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6"*ngIf="reclamacion.video">
+            <ion-item lines="none">
+              <ion-label>🎞️ Video</ion-label>
+            </ion-item>
+          </ion-col>  
+          <ion-col size="6"*ngIf="reclamacion.otros">
+            <ion-item lines="none">
+              <ion-label>📝 Otros</ion-label>
+            </ion-item>
+          </ion-col>                                                          
+        </ion-row>
+      </ion-item-group>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="reclamacion?.historial?.length">
+    <ion-card-header>
+      <ion-card-title>Historial & Comentarios</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of reclamacion.historial">
+          <ion-label>
+            <h3>{{ item.fecha | date: 'longDate' }}</h3>
+            <p><strong>{{ item.tipo }}</strong></p>
+            <p>{{ item.comentario }}</p>
+          </ion-label>
+          <ion-badge slot="end" [color]="estadoColorMap[item.estado]">
+            {{ estadoTextoMap[item.estado] }}
+          </ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  
+
+  <ion-button expand="block" color="medium" routerLink="/reclamaciones" class="ion-padding-top">
+    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+    Volver
+  </ion-button>  
+
+  <ng-template #sinDatos>
+    <ion-text color="danger">
+      <p class="ion-text-center">No se encontró información de la reclamación.</p>
+    </ion-text>
+  </ng-template>
+</ion-content>

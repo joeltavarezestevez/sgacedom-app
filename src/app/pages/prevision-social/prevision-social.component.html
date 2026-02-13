@@ -1,0 +1,93 @@
+<sg-header title="Previsión Social"></sg-header>
+
+<ng-container *ngIf="ayudas; else loading">
+	<ion-content class="ion-padding" color="light">
+		<ion-button expand="block" routerLink="/ayudas/new" color="primary">
+			➕ Solicitar Ayuda
+		</ion-button>
+		<h3 class="ion-padding-top">Mis Ayudas Solicitadas</h3>
+		<!-- Botón para mostrar u ocultar los filtros -->
+		<ion-button expand="block" fill="outline" (click)="mostrarFiltros = !mostrarFiltros">
+			<ion-icon *ngIf="mostrarFiltros" slot="start" name="funnel-outline"></ion-icon>
+			<ion-icon *ngIf="!mostrarFiltros"slot="start" name="funnel"></ion-icon>
+			{{ mostrarFiltros ? 'Ocultar filtros' : 'Mostrar filtros' }}
+		</ion-button>
+
+		<!-- Filtros -->
+		<div *ngIf="mostrarFiltros" class="ion-padding">	
+			<h4 class="">Filtros</h4>
+			<ion-item>
+				<ion-label position="stacked">Tipo de Ayuda</ion-label>
+			    <ion-select [(ngModel)]="filtros.tip_ayuda" name="tip_ayuda" interface="popover" (ionChange)="filtrarAyudas()" placeholder="Selecciona una opción">
+			      <ion-select-option *ngFor="let tipo of tiposAyuda" [value]="tipo.id">{{ tipo.nombre }}</ion-select-option>
+			    </ion-select>
+			</ion-item>
+			<ion-item>
+				<ion-label position="stacked">Estado</ion-label>
+				<ion-select [(ngModel)]="filtros.estado" interface="popover" (ionChange)="filtrarAyudas()" placeholder="Selecciona una opción">
+					<ion-select-option value="1">Nueva</ion-select-option>
+					<ion-select-option value="2">Revisada</ion-select-option>
+					<ion-select-option value="3">Completada</ion-select-option>
+					<ion-select-option value="4">Cancelada</ion-select-option>	    
+				</ion-select>
+			</ion-item>
+			<ion-grid class="ion-no-padding">
+				<ion-row>
+					<ion-col size="6">
+						<ion-item>
+							<ion-label position="stacked">Desde</ion-label>
+							<ion-input
+								type="date"
+								[(ngModel)]="filtros.fechaDesde"
+								(ionChange)="filtrarAyudas()">
+							</ion-input>
+						</ion-item>
+					</ion-col>
+					<ion-col size="6">
+						<ion-item>
+							<ion-label position="stacked">Hasta</ion-label>
+							<ion-input
+								type="date"
+								[(ngModel)]="filtros.fechaHasta"
+								(ionChange)="filtrarAyudas()">
+							</ion-input>
+						</ion-item>
+					</ion-col>
+				</ion-row>
+			</ion-grid>			
+			<ion-button expand="block" fill="outline" color="medium" (click)="limpiarFiltros()">
+				Limpiar Filtros
+			</ion-button>
+		</div>	
+		<ion-list *ngIf="ayudasFiltradas.length > 0; else sinAyudas">
+			<ion-item *ngFor="let ayuda of ayudasFiltradas; let i = index" lines="full" routerLink="/ayudas/{{ayuda.pre_socialid
+}}/details" detail="true">
+				<ion-label>
+					<h2><strong>{{ tipoAyudaTextoMap[+ayuda.tip_ayuda] }}</strong></h2>
+					<p><small>Fecha: {{ ayuda.created_at | date:'longDate' }}</small></p>
+				</ion-label>
+
+				<!-- Badge alineado a la derecha -->
+				<ion-badge
+					slot="end"
+					[color]="estadoColorMap[+ayuda.estado]"
+					class="ion-text-capitalize">
+					{{ estadoTextoMap[+ayuda.estado] }}
+				</ion-badge>
+			</ion-item>
+		</ion-list>
+
+		<ng-template #sinAyudas>
+			<ion-text color="medium">
+				<p class="ion-text-center">No tiene solicitudes de ayuda registradas.</p>
+			</ion-text>
+		</ng-template>
+	</ion-content>
+</ng-container>
+
+<ng-template #loading>
+	<ion-card class="ion-padding ion-text-center">
+		<ion-spinner name="crescent" color="primary"></ion-spinner>
+		<p>Cargando solicitudes...</p>
+	</ion-card>
+</ng-template>

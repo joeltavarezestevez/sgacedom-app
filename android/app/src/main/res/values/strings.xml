@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SGACEDOM</string>
+    <string name="title_activity_main">SGACEDOM</string>
+    <string name="package_name">org.sgacedom.app</string>
+    <string name="custom_url_scheme">org.sgacedom.app</string>
+</resources>

@@ -1,0 +1,22 @@
+ .readonly {
+ 	color: #5f5f5f;
+ }
+
+.foto-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.foto-preview {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 100%;
+  border: 2px solid #ccc;
+}

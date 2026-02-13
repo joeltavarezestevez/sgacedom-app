@@ -1,0 +1,105 @@
+<sg-header title="Reporte de Eventos"></sg-header>
+<ng-container *ngIf="eventos; else loading">
+	<ion-content class="ion-padding" color="light">
+		<ion-button expand="block" routerLink="/reporte-eventos/new" color="primary">
+			➕ Reportar Evento
+		</ion-button>
+		<h3 class="ion-padding-top">Mis Eventos Reportados</h3>
+		<!-- Botón para mostrar u ocultar los filtros -->
+		<ion-button expand="block" fill="outline" (click)="mostrarFiltros = !mostrarFiltros">
+			<ion-icon *ngIf="mostrarFiltros" slot="start" name="funnel-outline"></ion-icon>
+			<ion-icon *ngIf="!mostrarFiltros"slot="start" name="funnel"></ion-icon>
+			{{ mostrarFiltros ? 'Ocultar filtros' : 'Mostrar filtros' }}
+		</ion-button>
+
+		<!-- Filtros -->
+		<div *ngIf="mostrarFiltros" class="ion-padding">	
+			<h4 class="">Filtros</h4>
+			<ion-item>
+				<ion-label position="stacked">Nombre</ion-label>
+				<ion-input [(ngModel)]="filtros.nombre" (ionInput)="filtrarEventos()"></ion-input>
+			</ion-item>
+			<ion-item>
+				<ion-label position="stacked">Lugar</ion-label>
+				<ion-input [(ngModel)]="filtros.lugar" (ionInput)="filtrarEventos()"></ion-input>
+			</ion-item>
+			<ion-item>
+				<ion-label position="stacked">Tipo de Evento</ion-label>
+		      <ion-select [(ngModel)]="filtros.tipo" name="tipo" interface="popover" (ionChange)="filtrarEventos()" placeholder="Seleccione una opción" required>
+		        <ion-select-option value="Fiesta">Fiesta</ion-select-option>
+		        <ion-select-option value="Concierto">Concierto</ion-select-option>
+		        <ion-select-option value="Festival">Festival</ion-select-option>
+		        <ion-select-option value="Bar">Bar</ion-select-option>
+		        <ion-select-option value="Otro">Otro</ion-select-option>
+		      </ion-select>			    
+			</ion-item>
+			<ion-item>
+				<ion-label position="stacked">Estado</ion-label>
+				<ion-select [(ngModel)]="filtros.estado" interface="popover" (ionChange)="filtrarEventos()" placeholder="Selecciona una opción">
+					<ion-select-option value="1">Nueva</ion-select-option>
+					<ion-select-option value="2">Revisada</ion-select-option>
+					<ion-select-option value="3">Completada</ion-select-option>
+					<ion-select-option value="4">Cancelada</ion-select-option>	    
+				</ion-select>
+			</ion-item>
+			<ion-grid class="ion-no-padding">
+				<ion-row>
+					<ion-col size="6">
+						<ion-item>
+							<ion-label position="stacked">Desde</ion-label>
+							<ion-input
+								type="date"
+								[(ngModel)]="filtros.fechaDesde"
+								(ionChange)="filtrarEventos()">
+							</ion-input>
+						</ion-item>
+					</ion-col>
+					<ion-col size="6">
+						<ion-item>
+							<ion-label position="stacked">Hasta</ion-label>
+							<ion-input
+								type="date"
+								[(ngModel)]="filtros.fechaHasta"
+								(ionChange)="filtrarEventos()">
+							</ion-input>
+						</ion-item>
+					</ion-col>
+				</ion-row>
+			</ion-grid>			
+			<ion-button expand="block" fill="outline" color="medium" (click)="limpiarFiltros()">
+				Limpiar Filtros
+			</ion-button>
+		</div>			
+		<ion-list *ngIf="eventosFiltrados.length > 0; else sinEventos">
+			<ion-item *ngFor="let r of eventosFiltrados; let i = index" lines="full" routerLink="/reporte-eventos/{{r.id}}/details" detail="true">
+				<ion-label>
+					<h2>{{ r.nombre_evento }}</h2>
+					<p><strong>Tipo:</strong> {{ r.tipo_actividad }}</p>
+					<p><strong>Lugar:</strong> {{ r.lugar }}, <span *ngIf="r.municipio">{{r.municipio}}, </span><span *ngIf="r.provincia">{{r.provincia}}</span> </p>
+					<p><small>Fecha: {{ r.fecha | date:'longDate' }} | Hora: {{ getFechaHoraEvento(r) | date:'hh:mm a' }} </small></p>
+				</ion-label>
+
+				<!-- Badge alineado a la derecha -->
+				<ion-badge
+					slot="end"
+					[color]="estadoColorMap[+r.estado]"
+					class="ion-text-capitalize">
+					{{ estadoTextoMap[+r.estado] }}
+				</ion-badge>
+			</ion-item>
+		</ion-list>
+
+		<ng-template #sinEventos>
+			<ion-text color="medium">
+				<p class="ion-text-center">No hay eventos registrados.</p>
+			</ion-text>
+		</ng-template>
+	</ion-content>
+</ng-container>
+
+<ng-template #loading>
+	<ion-card class="ion-padding ion-text-center">
+		<ion-spinner name="crescent" color="primary"></ion-spinner>
+		<p>Cargando reclamaciones...</p>
+	</ion-card>
+</ng-template>

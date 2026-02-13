@@ -1,0 +1,162 @@
+<sg-header [title]="isEdit ? 'Editar Reclamación' : 'Registrar Reclamación'"></sg-header>
+
+<ion-content class="ion-padding">
+
+  <ion-text class="ion-margin-bottom">
+    <h2>Formulario de Reclamación</h2>
+    <ion-chip color="secondary">
+      Reclamar es un derecho del compositor. Si existe una inconformidad o duda sobre el movimiento de sus obras,
+      puede llenar este formulario y su caso será procesado. De proceder, se reflejará en los siguientes repartos del año.
+    </ion-chip>
+  </ion-text>
+
+  <ion-note color="danger" class="ion-margin-top"><strong>*</strong> Campos obligatorios</ion-note>
+  <form #reclamacionForm="ngForm" (ngSubmit)="enviarReclamacion()">
+    <ion-item-divider color="light">
+      <ion-label><strong>Título(s) de la obra(s) <ion-text color="danger">*</ion-text></strong></ion-label>
+    </ion-item-divider>  
+    <ion-item>
+      <ion-textarea [(ngModel)]="reclamacion.titulos" name="titulos" placeholder="Escriba el/los titulo(s) separado por coma" required></ion-textarea>
+    </ion-item>
+  
+    <ion-item-divider color="light">
+      <ion-label><strong>Motivo <ion-text color="danger">*</ion-text></strong></ion-label>
+    </ion-item-divider>  
+    <ion-radio-group [(ngModel)]="reclamacion.motivos_id" name="motivos_id" required>
+      <ion-item *ngFor="let m of motivos">
+        <ion-label>{{ m.nombre }}</ion-label>
+        <ion-radio slot="start" [value]="m.id"></ion-radio>
+      </ion-item> 
+    </ion-radio-group>
+
+    <ion-item-divider color="light">
+      <ion-label><strong>¿Dónde fue divulgada la obra?</strong></ion-label>
+    </ion-item-divider>
+
+    <ion-list>
+      <!-- CONCIERTO -->
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.concierto.activo" name="concierto"><strong>Concierto</strong></ion-toggle>
+      </ion-item>
+      <ion-list *ngIf="reclamacion.concierto.activo">
+        <ion-item class="ion-padding-horizontal">
+          <ion-input label="Sala" [(ngModel)]="reclamacion.concierto.sala" name="concierto_sala" placeholder="Nombre de la sala"></ion-input>
+        </ion-item>
+        <ion-item class="ion-padding-horizontal">
+          <ion-input label="Lugar" [(ngModel)]="reclamacion.concierto.lugar" name="concierto_lugar" placeholder="Ciudad o provincia"></ion-input>
+        </ion-item>
+        <ion-item class="ion-padding-horizontal">
+          <ion-select label="País" [(ngModel)]="reclamacion.concierto.pais" name="concierto_pais" placeholder="Seleccione una opción">
+            <ion-select-option *ngFor="let pais of paises" [value]="pais.id">{{ pais.nombre }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item class="ion-padding-horizontal">
+          <ion-input label="Teléfono" type="tel" [(ngModel)]="reclamacion.concierto.telefono" name="concierto_telefono" type="tel" placeholder="(999) 999-9999"></ion-input>
+        </ion-item>
+      </ion-list>    
+
+      <!-- RADIO -->
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.radio.activo" name="radio"><strong>Radio</strong></ion-toggle>
+      </ion-item>     
+      <ion-list *ngIf="reclamacion.radio.activo">
+        <ion-item class="ion-padding-horizontal">
+          <ion-input label="Emisora" [(ngModel)]="reclamacion.radio.emisora" name="radio_emisora" placeholder="Nombre de la emisora"></ion-input>
+        </ion-item>
+        <ion-item class="ion-padding-horizontal">
+          <ion-input label="Programa" [(ngModel)]="reclamacion.radio.programa" name="radio_programa" placeholder="Ciudad o provincia"></ion-input>
+        </ion-item>
+        <ion-item class="ion-padding-horizontal">
+          <ion-select label="País" [(ngModel)]="reclamacion.radio.pais" name="radio_pais" placeholder="Seleccione una opción">
+            <ion-select-option *ngFor="let pais of paises" [value]="pais.id">{{ pais.nombre }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item class="ion-padding-horizontal">
+          <ion-input label="Teléfono" type="tel" [(ngModel)]="reclamacion.radio.telefono" name="radio_telefono" type="tel" placeholder="(999) 999-9999"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <!-- TV -->
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.tv.activo" name="tv"><strong>TV</strong></ion-toggle>
+      </ion-item>   
+      <ion-list *ngIf="reclamacion.tv.activo">
+        <ion-item class="ion-padding-horizontal">
+          <ion-input label="Compañía" [(ngModel)]="reclamacion.tv.compania" name="tv_compania" placeholder="Nombre de la compañía"></ion-input>
+        </ion-item>
+        <ion-item class="ion-padding-horizontal">
+          <ion-input label="Programa" [(ngModel)]="reclamacion.tv.programa" name="tv_programa" placeholder="Nombre del programa"></ion-input>
+        </ion-item>
+        <ion-item class="ion-padding-horizontal">
+          <ion-select label="País" [(ngModel)]="reclamacion.tv.pais" name="tv_pais" placeholder="Seleccione una opción">
+            <ion-select-option *ngFor="let pais of paises" [value]="pais.id">{{ pais.nombre }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item class="ion-padding-horizontal">
+          <ion-input label="Spot Publicitario" [(ngModel)]="reclamacion.tv.spot" name="tv_spot" placeholder="Spot publicitario"></ion-input>
+        </ion-item>
+      </ion-list>
+    </ion-list>
+
+    <!-- PLATAFORMAS DIGITALES -->
+    <ion-item-divider color="light">
+      <ion-label><strong>Plataformas Digitales</strong></ion-label>
+    </ion-item-divider> 
+    <ion-list>
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.youtube" name="youtube">Youtube</ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.spotify" name="spotify">Spotify</ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.apple" name="apple">Apple Music</ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.amazon" name="amazon">Amazon Music</ion-toggle>
+      </ion-item>
+    </ion-list>
+
+    <!-- OTROS FORMATOS -->
+    <ion-item-divider color="light">
+      <ion-label><strong>Otros formatos</strong></ion-label>
+    </ion-item-divider> 
+    <ion-list>
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.cd" name="cd">CD</ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.cassette" name="cassette">Cassette</ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.video" name="video">Video</ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-toggle [(ngModel)]="reclamacion.otros" name="otros">Otros</ion-toggle>
+      </ion-item>    
+    </ion-list>
+
+    <!-- MENSAJE -->
+    <ion-item-divider color="light">
+      <ion-label><strong>Mensaje <ion-text color="danger">*</ion-text></strong></ion-label>
+    </ion-item-divider> 
+    <ion-item>
+      <ion-textarea [(ngModel)]="reclamacion.mensaje" name="mensaje" placeholder="Explique brevemente su reclamación" required></ion-textarea>
+    </ion-item>
+
+    <ion-chip color="warning" class="ion-margin-top">
+      Nota: Al momento de realizar una reclamación se debe tomar en cuenta que SGACEDOM no se compromete a pagar obras que sean explotadas por usuarios que no pagan derecho de autor.
+    </ion-chip>
+
+    <!-- ENVIAR -->
+    <ion-button expand="block" class="ion-margin-top" type="submit" color="primary" class="ion-margin-top" [disabled]="!reclamacionForm.valid ">
+      Enviar Reclamación
+      <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+    </ion-button>
+    <ion-button expand="block" type="button" color="danger" class="ion-margin-top ion-margin-bottom" routerLink="/reclamaciones">
+      Cancelar
+      <ion-icon slot="start" name="close-outline"></ion-icon>
+    </ion-button>
+  </form>
+
+</ion-content>

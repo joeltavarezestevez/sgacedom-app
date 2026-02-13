@@ -1,0 +1,141 @@
+<sg-header title="Reporte de Eventos"></sg-header>
+
+<ion-content class="ion-padding">
+  <ion-text>
+    <h2>Formulario de Reporte de Eventos</h2>
+  </ion-text>
+  <ion-note color="danger" class="ion-margin-top"><strong>*</strong> Campos obligatorios</ion-note>
+  <form #eventoForm="ngForm" (ngSubmit)="onSubmit()">
+    <ion-item-divider color="light" class="ion-margin-top">
+      <ion-label><strong>Datos Generales del Evento</strong></ion-label>
+    </ion-item-divider>  
+    <ion-item>
+      <ion-label position="stacked">Nombre del Evento <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input [(ngModel)]="reporte.nombre_evento" name="nombre" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Tipo de Actividad <ion-text color="danger">*</ion-text></ion-label>
+      <ion-select [(ngModel)]="reporte.tipo_actividad" name="tipo" (ionChange)="mostrarOtroTipo = reporte.tipo_actividad === 'Otro'" placeholder="Seleccione una opción" required>
+        <ion-select-option value="Fiesta">Fiesta</ion-select-option>
+        <ion-select-option value="Concierto">Concierto</ion-select-option>
+        <ion-select-option value="Festival">Festival</ion-select-option>
+        <ion-select-option value="Bar">Bar</ion-select-option>
+        <ion-select-option value="Otro">Otro</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="mostrarOtroTipo">
+      <ion-label position="stacked">Especificar Tipo <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input [(ngModel)]="reporte.otro_tipo_actividad" name="tipoOtro" *ngIf="reporte.tipo_actividad === 'Otro'" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Interprete(s) <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input [(ngModel)]="reporte.interpretes" name="interpretes" required></ion-input>
+    </ion-item>    
+    <!-- Fecha del evento -->
+    <ion-item>
+      <ion-label position="stacked">Fecha <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input type="date" [(ngModel)]="reporte.fecha" name="fechaEvento" required><ion-icon slot="end" name="calendar-outline" color="medium"></ion-icon></ion-input>
+    </ion-item>
+    <!-- Hora del evento -->
+    <ion-item lines="inset">
+      <ion-label position="stacked">
+        Hora <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input type="time" [(ngModel)]="reporte.hora" name="hora"required>
+        <ion-icon slot="end" name="time-outline"></ion-icon>
+      </ion-input>
+    </ion-item>
+    <ion-item-divider color="light">
+      <ion-label><strong>Ubicaci&oacute;n del Evento</strong></ion-label>
+    </ion-item-divider>      
+    <ion-item>
+      <ion-label position="stacked">Lugar <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input [(ngModel)]="reporte.lugar" name="lugar" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Provincia <ion-text color="danger">*</ion-text></ion-label>
+      <ion-select [(ngModel)]="reporte.provincia" (ionChange)="onProvinciaChange()" name="provincia" placeholder="Seleccionar opción" required>
+        <ion-select-option *ngFor="let p of provincias" [value]="p.id">
+          {{ p.nombre }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="municipiosSeleccionados">
+      <ion-label position="stacked">Municipio</ion-label>
+      <ion-select [(ngModel)]="reporte.municipio" name="municipio" placeholder="Seleccionar opción">
+        <ion-select-option *ngFor="let m of municipiosSeleccionados" [value]="m.id">
+          {{ m.nombre }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>    
+    <ion-item>
+      <ion-toggle [(ngModel)]="ubicacionAutomatica" name="ubicacion" (ionChange)="clearUrl()">Obtener Geolocalizaci&oacute;n Autom&aacute;tica</ion-toggle>
+    </ion-item>
+    <ion-list *ngIf="!ubicacionAutomatica">
+      <ion-item>
+        <ion-label position="stacked">Enlace de Ubicaci&oacute;n</ion-label>
+        <ion-input [(ngModel)]="reporte.enlace_ubicacion" name="enlace_ubicacion" placeholder="Inserte aqui el enlace de la ubicacion del evento"></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-button expand="block" (click)="obtenerUbicacion()" class="ion-padding-top" *ngIf="ubicacionAutomatica">
+      Obtener ubicación
+      <ion-icon name="locate-outline" slot="start"></ion-icon>
+    </ion-button>
+
+    <div *ngIf="reporte.latitud && reporte.longitud && ubicacionAutomatica" class="ion-padding">
+      <p><strong>Ubicación GPS:</strong></p>
+      <p>Lat: {{ reporte.latitud }} | Lng: {{ reporte.longitud }}</p>
+    </div>
+
+    <ion-card *ngIf="mostrarMapa && ubicacionAutomatica">
+      <ion-card-header>
+        <ion-card-title>Ubicación del Evento</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <iframe
+        [src]="ubicacionUrl"
+        width="100%"
+        height="300"
+        frameborder="0"
+        style="border:0; border-radius: 10px;"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-item-divider color="light">
+    <ion-label><strong>Informaci&oacute;n Adicional</strong></ion-label>
+  </ion-item-divider>  
+  <!-- Observaciones -->
+  <ion-item>
+    <ion-label position="stacked">Observaciones</ion-label>
+    <ion-textarea [(ngModel)]="reporte.observaciones" name="observaciones" autoGrow="true"></ion-textarea>
+  </ion-item>
+
+  <div class="ion-margin-vertical ion-padding-horizontal">
+    <ion-label position="stacked">Adjuntar Evidencia(s) <ion-text color="danger">*</ion-text></ion-label>
+    <ion-button expand="block" shape="round" fill="outline" (click)="fileInput.click()" color="medium">
+      <ion-icon name="attach-outline" slot="start"></ion-icon>
+      Seleccionar Archivo
+    </ion-button>
+    <input type="file" accept="image/*,video/*,application/pdf" hidden #fileInput (change)="onFileSelected($event)" required/>
+    <ion-text color="medium" *ngIf="reporte.flyer_url">
+      <p class="ion-text-center">1 archivo seleccionado</p>
+    </ion-text>
+  </div>
+  <ion-item-divider>&nbsp;</ion-item-divider> 
+  <ion-button expand="block" type="submit" color="primary" class="ion-margin-top" [disabled]="!eventoForm.valid || !reporte.flyer_url">
+    Enviar Reporte
+    <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+  </ion-button>
+  <ion-button expand="block" type="button" color="danger" class="ion-margin-top ion-margin-bottom" routerLink="/reporte-eventos">
+    Cancelar
+    <ion-icon slot="start" name="close-outline"></ion-icon>
+  </ion-button>     
+</form>
+</ion-content>

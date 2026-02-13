@@ -1,0 +1,18 @@
+<ion-modal [isOpen]="isOpen">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-button (click)="cancel()">Cancelar</ion-button>
+      </ion-buttons>
+      <ion-title>{{title}}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="confirm()">Seleccionar</ion-button>
+      </ion-buttons>      
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-item *ngFor="let item of data">
+      <ion-label>{{ item[itemTextField] }}</ion-label>
+    </ion-item>
+  </ion-content>
+</ion-modal>

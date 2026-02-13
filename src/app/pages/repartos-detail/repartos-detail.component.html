@@ -1,0 +1,122 @@
+<sg-header title="Detalle del Reparto"></sg-header>
+
+<ion-content class="ion-padding" *ngIf="reparto; else loading">
+  <ion-card>
+    <ion-card-header>
+      <ion-item lines="none">
+        <ion-label>
+          <ion-card-title class="ion-text-wrap ion-padding-bottom">Reparto No. {{ reparto?.id }}</ion-card-title>
+          <ion-card-subtitle class="ion-text-wrap" style="font-size: 0.85rem;">{{ reparto?.titulo }}</ion-card-subtitle>
+          <p><ion-icon slot="start" name="calendar-outline"></ion-icon> <strong> Fecha:</strong> {{ reparto?.fecha_reg| date:'longDate' }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-card-header>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Documentos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+
+        <!-- 📄 Liquidación -->
+        <ion-item button detail (click)="onArchivoClick(reparto.liquidacion)" *ngIf="reparto.liquidacion">
+          <ion-thumbnail slot="start">
+            <!-- 🖼 IMAGEN -->
+            <ng-container *ngIf="isImage(reparto.liquidacion)">
+              <img [src]="getFileUrl(reparto.liquidacion)" alt="Documento" />
+            </ng-container>
+            <!-- 📄 PDF -->
+            <ng-container *ngIf="isPdf(reparto.liquidacion)">
+              <div class="icon-thumb pdf">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+            </ng-container>
+            <!-- 📦 OTRO -->
+            <ng-container *ngIf="!isImage(reparto.liquidacion) && !isPdf(reparto.liquidacion)">
+              <div class="icon-thumb">
+                <ion-icon name="attach-outline"></ion-icon>
+              </div>
+            </ng-container>
+          </ion-thumbnail>
+          <ion-label>
+            <h3>📄 Liquidación</h3>
+            <p *ngIf="isImage(reparto.liquidacion)">Ver Imagen</p>
+            <p *ngIf="isPdf(reparto.liquidacion)">Ver Documento PDF</p>
+            <p *ngIf="!isImage(reparto.liquidacion) && !isPdf(reparto.liquidacion)">Ver Documento</p>
+          </ion-label>
+        </ion-item>
+
+        <!-- 💸 Descuento -->
+        <ion-item button detail (click)="onArchivoClick(reparto.descuento)" *ngIf="reparto.descuento">
+          <ion-thumbnail slot="start">
+            <!-- 🖼 IMAGEN -->
+            <ng-container *ngIf="isImage(reparto.descuento)">
+              <img [src]="getFileUrl(reparto.descuento)" alt="Documento" />
+            </ng-container>
+            <!-- 📄 PDF -->
+            <ng-container *ngIf="isPdf(reparto.descuento)">
+              <div class="icon-thumb pdf">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+            </ng-container>
+            <!-- 📦 OTRO -->
+            <ng-container *ngIf="!isImage(reparto.descuento) && !isPdf(reparto.descuento)">
+              <div class="icon-thumb">
+                <ion-icon name="attach-outline"></ion-icon>
+              </div>
+            </ng-container>
+          </ion-thumbnail>
+          <ion-label>
+            <h3>💸 Descuento</h3>
+            <p *ngIf="isImage(reparto.descuento)">Ver Imagen</p>
+            <p *ngIf="isPdf(reparto.descuento)">Ver Documento PDF</p>
+            <p *ngIf="!isImage(reparto.descuento) && !isPdf(reparto.descuento)">Ver Documento</p>
+          </ion-label>
+        </ion-item>
+
+        <!-- ➕ Adicional -->
+        <ion-item button detail (click)="onArchivoClick(reparto.adicional)" *ngIf="reparto.adicional">
+          <ion-thumbnail slot="start">
+            <!-- 🖼 IMAGEN -->
+            <ng-container *ngIf="isImage(reparto.adicional)">
+              <img [src]="getFileUrl(reparto.adicional)" alt="Documento" />
+            </ng-container>
+            <!-- 📄 PDF -->
+            <ng-container *ngIf="isPdf(reparto.adicional)">
+              <div class="icon-thumb pdf">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+            </ng-container>
+            <!-- 📦 OTRO -->
+            <ng-container *ngIf="!isImage(reparto.adicional) && !isPdf(reparto.adicional)">
+              <div class="icon-thumb">
+                <ion-icon name="attach-outline"></ion-icon>
+              </div>
+            </ng-container>
+
+          </ion-thumbnail>
+
+          <ion-label>
+            <h3>➕ Adicional</h3>
+            <p *ngIf="isImage(reparto.adicional)">Ver Imagen</p>
+            <p *ngIf="isPdf(reparto.adicional)">Ver Documento PDF</p>
+            <p *ngIf="!isImage(reparto.adicional) && !isPdf(reparto.adicional)">Ver Documento</p>
+          </ion-label>
+        </ion-item>        
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" color="medium" routerLink="/repartos" class="ion-padding-top">
+    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+    Volver
+  </ion-button>
+</ion-content>
+
+<ng-template #loading>
+  <ion-card class="ion-padding ion-text-center">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando reparto...</p>
+  </ion-card>
+</ng-template>

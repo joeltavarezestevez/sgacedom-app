@@ -1,0 +1,180 @@
+<sg-header [title]="isEdit ? 'Editar Obra' : 'Registrar Obra'"></sg-header>
+
+<ion-content class="ion-padding">
+  <ion-text class="ion-margin-bottom">
+    <h2>Formulario de Registro de Obras</h2>
+  </ion-text>
+  <ion-note color="danger" class="ion-margin-top"><strong>*</strong> Campos obligatorios</ion-note>
+  <form #obraForm="ngForm" (ngSubmit)="onSubmit()">
+    <ion-list lines="full">
+      <ion-item-divider color="light">
+        <ion-label><strong>Datos Generales de la Obra</strong></ion-label>
+      </ion-item-divider>        
+      <ion-item>
+        <ion-label position="stacked">T&iacute;tulo Original <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input [(ngModel)]="obra.titulo" name="titulo" placeholder="Introduzca el título original de su obra" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Otros T&iacute;tulos</ion-label>
+        <ion-input [(ngModel)]="obra.titulos" name="titulos" placeholder="Introduzca otros títulos separados por coma (si aplica)"></ion-input>
+      </ion-item>
+      <ion-item (click)="select.open()">
+        <ion-label position="stacked">
+          Género <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <app-searchable-select title="Seleccione un género" [data]="generos" itemTextField="nombre" #select></app-searchable-select>
+        <ion-text *ngIf="obra.genero">
+          {{ obra.genero || 'Seleccione una opción' }}
+        </ion-text>
+      </ion-item>
+      <ion-item *ngIf="obra.genero == 'Otro'">
+        <ion-label position="stacked">Describa el genero <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input [(ngModel)]="obra.genero_otro_descripcion" name="genero_otro_descripcion" placeholder="Otro Genero" *ngIf="obra.genero == 'Otro'" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Duraci&oacute;n</ion-label>
+        <ion-input [(ngModel)]="obra.duracion" name="duracion" placeholder="MM:SS"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Fecha de Ejecuci&oacute;n al P&uacute;blico <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input type="date" [(ngModel)]="obra.fejecucion" name="fejecucion" required><ion-icon slot="end" name="calendar-outline" color="medium"></ion-icon></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Lugar de Publicación <ion-text color="danger">*</ion-text></ion-label>
+        <ion-select multiple="true" [(ngModel)]="obra.lpublico" name="lpublico" placeholder="Seleccione una opción" required>
+          <ion-select-option *ngFor="let l of lugaresPublicacion" [value]="l.value"> {{ l.label }} </ion-select-option>
+        </ion-select>
+      </ion-item>      
+      <ion-item>
+        <ion-label position="stacked">Editora</ion-label>
+        <ion-select [(ngModel)]="obra.editora_id" name="editora_id" placeholder="Seleccione una opción">
+          <ion-select-option *ngFor="let e of editoras" [value]="e.id">
+            {{ e.nombre }}
+          </ion-select-option>
+          <ion-select-option value="0">Otra</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="obra.editora_id == 0">
+        <ion-label position="stacked">Escriba el nombre de la editora <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input [(ngModel)]="obra.editora_otra_descripcion" name="editora_otra_descripcion" placeholder="Otra Editora" *ngIf="obra.editora_id == 0" required></ion-input>
+      </ion-item>      
+      <ion-list>
+        <ion-item-divider color="light">
+          <ion-label><strong>Co-autores</strong></ion-label>
+        </ion-item-divider>
+
+        <ng-container *ngFor="let colab of obra.colaboradores; let i = index">
+          <ion-item>
+            <ion-label position="stacked">No. Socio/CAE</ion-label>
+            <ion-input [(ngModel)]="colab.num_socio" name="num_socio-{{i}}" *ngIf="obra.colaboradores.length > 0"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Nombre Completo <ion-text color="danger">*</ion-text></ion-label>
+            <ion-input [(ngModel)]="colab.nom_com" name="nom_com-{{i}}" required *ngIf="obra.colaboradores.length > 0"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Profesión <ion-text color="danger">*</ion-text></ion-label>
+            <ion-select [(ngModel)]="colab.profesion" name="profesion-{{i}}" required *ngIf="obra.colaboradores.length > 0">
+              <ion-select-option value="1">AT - Autor</ion-select-option>
+              <ion-select-option value="2">ADM – Administrador</ion-select-option>
+              <ion-select-option value="3">SE - Sub Editor</ion-select-option>
+              <ion-select-option value="4">C – Compositor</ion-select-option>
+              <ion-select-option value="5">AR - Arreglista</ion-select-option>
+              <ion-select-option value="6">AD – Adaptador</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">% Ejecución <ion-text color="danger">*</ion-text></ion-label>
+            <ion-input type="number" [(ngModel)]="colab.dereje" name="dereje-{{i}}" required *ngIf="obra.colaboradores.length > 0"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">% Mecánico <ion-text color="danger">*</ion-text></ion-label>
+            <ion-input type="number" [(ngModel)]="colab.dermeca" name="dermeca-{{i}}" required *ngIf="obra.colaboradores.length > 0"></ion-input>
+          </ion-item>
+
+          <ion-button expand="block" color="danger" fill="clear" (click)="eliminarColaborador(i)" *ngIf="obra.colaboradores.length > 0">
+            Eliminar co-autor
+          </ion-button>
+
+          <ion-item-divider></ion-item-divider>
+        </ng-container>
+
+        <ion-button expand="block" fill="outline" color="primary" (click)="agregarColaborador()">
+          ➕ Agregar co-autor
+        </ion-button>
+      </ion-list>
+      <ion-item-divider color="light">
+        <ion-label><strong>Uso de Inteligencia Artificial</strong></ion-label>
+      </ion-item-divider>
+
+      <ion-item>
+        <ion-toggle [(ngModel)]="obra.usa_ia" name="usa_ia">
+          ¿Utiliz&oacute; Inteligencia Artificial?
+        </ion-toggle>
+      </ion-item>
+
+      <ng-container *ngIf="obra.usa_ia">
+        <ion-item>
+          <ion-label position="stacked">¿En qu&eacute; parte utiliz&oacute; IA? <ion-text color="danger">*</ion-text></ion-label>
+        <ion-select multiple="true" [(ngModel)]="obra.uso_ia" name="uso_ia" placeholder="Seleccione una opción" *ngIf="obra.usa_ia" required>
+          <ion-select-option value="Melodia"> Melod&iacute;a </ion-select-option>
+          <ion-select-option value="Letra"> Letra </ion-select-option>
+        </ion-select>          
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Porcentaje aproximado de uso (%) <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input type="number" [(ngModel)]="obra.porcentaje_ia" name="porcentaje_ia" min="1" max="100" placeholder="Ej. 50, 75" required *ngIf="obra.usa_ia"></ion-input>
+        </ion-item>
+      </ng-container>      
+      <ion-item-divider color="light">
+        <ion-label><strong>Información Adicional</strong></ion-label>
+      </ion-item-divider>    
+      <ion-item>
+        <ion-label position="stacked">N&uacute;m. de Cat&aacute;logo</ion-label>
+        <ion-input [(ngModel)]="obra.nocatalogo" name="catalogo" placeholder="Núm. de Catálogo"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Int&eacute;rprete(s)</ion-label>
+        <ion-input [(ngModel)]="obra.interpretes" name="interpretes" placeholder="Intérprete(s)"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Comentarios</ion-label>
+        <ion-textarea [(ngModel)]="obra.comentario" name="comentario" placeholder="Comentarios"></ion-textarea>
+      </ion-item>
+    </ion-list>
+    <ion-item class="disclaimer-item">
+      <ion-checkbox slot="start" [checked]="obra.aceptaCondiciones" [(ngModel)]="obra.aceptaCondiciones" name="aceptaCondiciones"></ion-checkbox>
+      <ion-label class="ion-text-wrap">
+        Al enviar este formulario usted esta de acuerdo con las 
+        <ion-text color="primary" (click)="abrirCondiciones()">
+          <strong>
+            <u>Condiciones de SGACEDOM al declarar su obra</u> <ion-text color="danger"> *</ion-text>
+          </strong>
+        </ion-text> 
+      </ion-label>
+    </ion-item>
+
+    <ion-text color="danger" *ngIf="mostrarErrorCondiciones">
+      <small>Debe aceptar las condiciones antes de continuar.</small>
+    </ion-text>
+
+    <ion-button expand="block" type="submit" color="primary" class="ion-margin-top" [disabled]="!obraForm.valid || (!isEdit && !obra.aceptaCondiciones)">
+      {{ isEdit ? 'Actualizar Obra' : 'Registrar Obra' }}
+      <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+    </ion-button>
+    <ion-button expand="block" type="button" color="danger" class="ion-margin-top ion-margin-bottom" routerLink="/obras">
+      Cancelar
+      <ion-icon slot="start" name="close-outline"></ion-icon>
+    </ion-button>
+    <br>
+  </form>
+</ion-content>

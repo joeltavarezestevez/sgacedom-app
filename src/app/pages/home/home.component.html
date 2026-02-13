@@ -1,0 +1,36 @@
+<sg-header title="Noticias"></sg-header>
+<ion-content>
+  <ion-card color="light" class="ion-margin-top ion-margin-horizontal">
+    <ion-card-header color="primary" class="ion-text-center">
+      <ion-card-title  style="font-size: 1.2rem; color: #fff;">
+        📰 Últimas Noticias de SGACEDOM
+      </ion-card-title>
+    </ion-card-header>
+  </ion-card>
+  <ion-list *ngIf="!loading; else sinNoticias">
+    <ion-item 
+      *ngFor="let post of posts"
+      lines="full"
+      button
+      detail
+      (click)="open(post.link)"
+      class="noticia-item"
+    >
+      <ion-thumbnail slot="start" *ngIf="post.featuredImage" class="noticia-img">
+        <ion-img [src]="post.featuredImage"></ion-img>
+      </ion-thumbnail>
+      <ion-label>
+        <h2 class="titulo-noticia" [innerHTML]="post.title.rendered" class="ion-text-uppercase"></h2>
+        <ion-note color="medium" class="fecha-noticia">
+          {{ post.date | date:'longDate' }}
+        </ion-note>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ng-template #sinNoticias>
+    <ion-card class="ion-padding ion-text-center">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Cargando noticias...</p>
+    </ion-card>
+  </ng-template>
+</ion-content>

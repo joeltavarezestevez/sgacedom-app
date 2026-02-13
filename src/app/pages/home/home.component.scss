@@ -1,0 +1,23 @@
+.noticia-item {
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --inner-padding-end: 10px;
+  --min-height: 80px;
+}
+
+.noticia-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.titulo-noticia {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.fecha-noticia {
+  font-size: 0.75rem;
+}

@@ -1,0 +1,81 @@
+<ion-app *ngIf="ready">
+  <ion-split-pane contentId="main-content">
+    <!-- <ion-menu [hidden]="!showMenu()" side="start" menuId="first" contentId="main-content" type="overlay" [swipeGesture]="true"> -->
+    <ion-menu *ngIf="user" side="start" menuId="first" contentId="main-content" type="overlay" [disabled]="!showMenu()" [swipeGesture]="showMenu()">
+      <ion-content>
+        <ion-list id="inbox-list">
+          <div class="ion-text-center ion-padding-top">
+            <img src="https://app.sgacedom.org/images/logofront.png" alt="CICSS App">
+          </div>
+          <ion-text color="primary" class="ion-text-center">
+            <h2 class="ion-padding-left"><strong>SGACEDOM APP</strong></h2>
+          </ion-text>
+          <br>
+          <ion-menu-toggle auto-hide="false">
+            <!-- PERFIL DEL SOCIO -->
+            <div class="ion-text-center" routerLink="/perfil" routerDirection="forward" routerLinkActive="selected"
+              [routerLinkActiveOptions]="{ exact: true }">
+              <ion-avatar style="margin: auto;">
+                <img [src]="fotoUrl" />
+              </ion-avatar>
+              <ion-text color="primary" class="ion-text-center">
+                <h5 class="ion-margin-top ion-text-uppercase" style="margin-bottom: 0;"> {{ user?.name }} {{ user?.lastname }} </h5>
+              </ion-text>
+              <p class="ion-text-muted" style="margin: 0;"> <strong>Socio #{{ user?.numero_socio }}</strong> </p>
+            </div>
+
+            <ion-item routerLink="/perfil" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+            👤 <ion-label> Mi Perfil</ion-label>
+            </ion-item>
+                        
+            <ion-item routerLink="/home" routerDirection="root" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+            📰 <ion-label> Noticias</ion-label>
+            </ion-item>
+
+            <ion-item routerLink="/obras" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+            🎼 <ion-label> Mis Obras</ion-label>
+            </ion-item>
+
+            <ion-item routerLink="/repartos" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+            💰 <ion-label> Mis Repartos</ion-label>
+            </ion-item>
+
+            <ion-item routerLink="/reclamaciones" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+              📄 <ion-label> Reclamaciones</ion-label>
+            </ion-item>
+
+            <ion-item routerLink="/ayudas" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+            🤝 <ion-label> Previsión Social</ion-label>
+            </ion-item>
+
+            <ion-item routerLink="/reporte-eventos" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+            📍 <ion-label> Reportar Evento</ion-label>
+            </ion-item>
+
+            <ion-item routerLink="/faq" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+            ❓ <ion-label> Preguntas Frecuentes</ion-label>
+            </ion-item>
+
+            <ion-item routerLink="/contacto" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+            ✉️ <ion-label> Contacto</ion-label>
+            </ion-item>
+            <ion-item (click)="cerrarSesion()">
+              🚪 <ion-label> Cerrar Sesión</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-split-pane>
+</ion-app>
+

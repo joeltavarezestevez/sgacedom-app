@@ -1,0 +1,27 @@
+<sg-header title="Preguntas Frecuentes"></sg-header>
+
+<ion-content class="ion-padding">
+<h3>Preguntas Frecuentes</h3>
+  <ion-accordion-group class="ion-padding-top">
+    <ion-accordion *ngFor="let item of faqs">
+      <ion-item slot="header">
+        <ion-label>{{ item.pregunta }}</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <p [innerHTML]="item.respuesta"></p>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+
+  <ion-card class="contact-card">
+    <ion-card-header>
+      <ion-card-title>¿Aún tienes preguntas?</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Contáctanos por cualquiera de los medios disponibles:</p>
+      <ion-button expand="block" fill="outline" color="primary" href="tel:8096896132">
+        Llamar al 809-689-6132 Ext. 233
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

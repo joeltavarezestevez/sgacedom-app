@@ -1,0 +1,110 @@
+<sg-header title="Detalles de la Solicitud" [showBack]="true"></sg-header>
+
+<ng-container *ngIf="prevision; else loading">
+
+  <ion-content class="ion-padding" color="light">
+    <ion-card *ngIf="prevision.pre_socialid; else sinDatos">
+      <ion-card-header>
+        <ion-card-title>Información de la Solicitud</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>Tipo de Ayuda</ion-label>
+          <ion-text>{{ TipoAyudaTextoMap[+prevision.tip_ayuda] }}</ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Fecha</ion-label>
+          <ion-text>{{ prevision.created_at | date:'longDate' }}</ion-text>
+        </ion-item>            
+        <ion-item>
+          <ion-label>Estado</ion-label>
+          <ion-text>
+            <ion-badge
+              [color]="estadoColorMap[+prevision.estado]"
+              class="ion-text-capitalize"
+              >
+              {{ estadoTextoMap[+prevision.estado] }}
+            </ion-badge>
+          </ion-text>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-label><strong>Motivo</strong></ion-label>
+        </ion-item>        
+        <ion-item lines="none">
+          <ion-label>{{ prevision.motivo_ayuda }}</ion-label>
+        </ion-item>      
+        <ion-item lines="none" *ngIf="prevision.coment_directiva">
+          <ion-label><strong>Comentario para el Consejo Directivo</strong></ion-label>
+        </ion-item>        
+        <ion-item lines="none">
+          <ion-label>{{ prevision.coment_directiva }}</ion-label>
+        </ion-item>         
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="prevision?.arc_soporte">
+      <ion-card-header>
+        <ion-card-title>Documento Adjunto</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-item button detail (click)="onArchivoClick(prevision.arc_soporte)">
+
+          <ion-thumbnail slot="start">
+
+            <!-- 🖼 IMAGEN -->
+            <ng-container *ngIf="isImage(prevision.arc_soporte)">
+              <img [src]="getFileUrl(prevision.arc_soporte)" alt="Documento" />
+            </ng-container>
+
+            <!-- 📄 PDF -->
+            <ng-container *ngIf="isPdf(prevision.arc_soporte)">
+              <div class="icon-thumb pdf">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+            </ng-container>
+
+            <!-- 📦 OTRO -->
+            <ng-container *ngIf="!isImage(prevision.arc_soporte) && !isPdf(prevision.arc_soporte)">
+              <div class="icon-thumb">
+                <ion-icon name="attach-outline"></ion-icon>
+              </div>
+            </ng-container>
+
+          </ion-thumbnail>
+
+          <ion-label>
+            <h3>Documento adjunto</h3>
+            <p *ngIf="isImage(prevision.arc_soporte)">Ver Imagen</p>
+            <p *ngIf="isPdf(prevision.arc_soporte)">Ver Documento PDF</p>
+            <p *ngIf="!isImage(prevision.arc_soporte) && !isPdf(prevision.arc_soporte)">Descargar Documento</p>
+
+          </ion-label>
+
+        </ion-item>
+
+      </ion-card-content>
+    </ion-card>
+
+
+    <ion-button expand="block" color="medium" routerLink="/ayudas" class="ion-padding-top">
+      <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+      Volver
+    </ion-button>  
+
+    <ng-template #sinDatos>
+      <ion-text color="danger">
+        <p class="ion-text-center">No se encontró información de la solicitud.</p>
+      </ion-text>
+    </ng-template>
+  </ion-content>
+</ng-container>
+
+<ng-template #loading>
+  <ion-card class="ion-padding ion-text-center">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando detalles...</p>
+  </ion-card>
+</ng-template>

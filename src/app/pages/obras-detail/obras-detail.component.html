@@ -1,0 +1,201 @@
+<sg-header [title]="obra?.titulo || 'Detalles de la Obra'" [showBack]="true"></sg-header>
+
+<ng-container *ngIf="obra; else loading">
+
+  <ion-content class="ion-padding" *ngIf="obra.id; else sinDatos">
+    <!-- Título y estado -->
+    <ion-card>
+      <ion-card-header>
+        <ion-item lines="none">
+          <ion-label>
+            <ion-card-title class="ion-text-wrap">{{ obra?.titulo }}</ion-card-title>
+            <p><strong>Fecha:</strong> {{ obra?.fejecucion | date:'longDate' }}</p>
+          </ion-label>
+          <ion-badge slot="end" [color]="estadoColorMap[obra?.estadoobra_id]" class="ion-text-capitalize">
+            {{ obra.estado_nombre }}
+          </ion-badge>
+        </ion-item>
+      </ion-card-header>
+    </ion-card>
+
+    <!-- Información general -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Información General</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>Otros títulos</ion-label>
+          <ion-text>{{ obra?.titulos || '—' }}</ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Género</ion-label>
+          <ion-text>{{ obra?.genero || '—' }}</ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Duración</ion-label>
+          <ion-text>{{ obra?.duracion || '—' }}</ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Fecha de Publicación</ion-label>
+          <ion-text>{{ obra?.fejecucion | date:'longDate' }}</ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Lugar de Publicación</ion-label>
+          <ion-text>{{ obra?.lpublico || '—' }}</ion-text>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Créditos -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Cr&eacute;ditos</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>Int&eacute;rpretes</ion-label>
+          <ion-text>{{ obra?.interpretes || '—' }}</ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Editora</ion-label>
+          <ion-text>{{ obra?.editora_nombre || '—' }}</ion-text>
+        </ion-item>        
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Colaboradores -->
+    <ion-card *ngIf="obra?.colaboradores?.length">
+      <ion-card-header>
+        <ion-card-title>Colaboradores</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-card
+          *ngFor="let c of obra.colaboradores; let i = index"
+          class="colaborador-card"
+        >
+          <ion-card-header>
+            <ion-card-title class="ion-text-wrap">
+              {{ c.nom_com }}
+            </ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6">
+                  <strong>No. Socio / CAE:</strong>
+                  <p>{{ c.num_socio || '—' }}</p>
+                </ion-col>                
+                <ion-col size="6">
+                  <strong>Profesión</strong>
+                  <p>{{ getProfesionLabel(c.profesion) }}</p>
+                </ion-col>
+
+                <ion-col size="6">
+                  <strong>% Ejecución</strong>
+                  <p>{{ c.dereje }}%</p>
+                </ion-col>
+
+                <ion-col size="6">
+                  <strong>% Mecánico</strong>
+                  <p>{{ c.dermeca }}%</p>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-card-content>
+    </ion-card>
+    
+    <!-- Catálogo -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Cat&aacute;logo</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>N&uacute;mero de Cat&aacute;logo</ion-label>
+          <ion-text>{{ obra?.nocatalogo || '—' }}</ion-text>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+    <!-- Uso de Inteligencia Artificial -->
+    <ion-card *ngIf="obra?.usa_ia !== null">
+      <ion-card-header>
+        <ion-card-title>Uso de IA</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-item>
+          <ion-label>¿Utiliza Inteligencia Artificial?</ion-label>
+          <ion-badge
+          [color]="obra.usa_ia ? 'warning' : 'medium'">
+            {{ obra.usa_ia ? 'Sí' : 'No' }}
+          </ion-badge>
+        </ion-item>
+        <ion-item *ngIf="obra.usa_ia === 1">
+          <ion-label>Porcentaje de Uso</ion-label>
+          <ion-text>
+            {{ obra.porcentaje_ia || '-' }}
+          </ion-text>
+        </ion-item>
+        <ion-item *ngIf="obra.usa_ia === 1">
+          <ion-label>¿En qué parte se utilizó?</ion-label>
+          <ion-text>
+            {{ obra.uso_ia || 'No especificado' }}
+          </ion-text>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Comentario -->
+    <ion-card *ngIf="obra?.comentario">
+      <ion-card-header>
+        <ion-card-title>Comentarios</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-text>{{ obra.comentario }}</ion-text>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Historial -->
+    <ion-card *ngIf="obra?.historial?.length">
+      <ion-card-header>
+        <ion-card-title>Historial</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let item of obra.historial">
+            <ion-label>
+              <h3>{{ item.fecha | date: 'longDate' }}</h3>
+              <p><strong>{{ item.titulo }}</strong></p>
+              <p>{{ item.comentario }}</p>
+            </ion-label>
+            <ion-badge slot="end" [color]="estadoColorMap[item.estado]">
+              {{ item.estado_nombre }}
+            </ion-badge>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="block" color="medium" routerLink="/obras" class="ion-padding-top">
+      <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+      Volver
+    </ion-button>  
+  </ion-content>
+  <ng-template #sinDatos>
+    <ion-text color="danger">
+      <p class="ion-text-center">No se encontró información de la obra.</p>
+    </ion-text>
+  </ng-template>  
+</ng-container>
+
+<ng-template #loading>
+  <ion-card class="ion-padding ion-text-center">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando obra...</p>
+  </ion-card>
+</ng-template>

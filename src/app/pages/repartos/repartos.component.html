@@ -1,0 +1,65 @@
+<sg-header title="Mis Repartos"></sg-header>
+<ng-container *ngIf="repartos; else loading">
+	<ion-content class="ion-padding" color="light">
+		<h3 class="ion-padding-top">Mis Repartos</h3>
+		<!-- Botón para mostrar u ocultar los filtros -->
+		<ion-button expand="block" fill="outline" (click)="mostrarFiltros = !mostrarFiltros">
+			<ion-icon *ngIf="mostrarFiltros" slot="start" name="funnel-outline"></ion-icon>
+			<ion-icon *ngIf="!mostrarFiltros"slot="start" name="funnel"></ion-icon>
+			{{ mostrarFiltros ? 'Ocultar filtros' : 'Mostrar filtros' }}
+		</ion-button>
+
+		<!-- Filtros -->
+		<div *ngIf="mostrarFiltros" class="ion-padding">	
+			<h4 class="">Filtros</h4>
+			<ion-grid class="ion-no-padding">
+				<ion-row>
+					<ion-col size="6">
+						<ion-item>
+							<ion-label position="stacked">Desde</ion-label>
+							<ion-input
+								type="date"
+								[(ngModel)]="filtros.fechaDesde"
+								(ionChange)="filtrarRepartos()">
+							</ion-input>
+						</ion-item>
+					</ion-col>
+					<ion-col size="6">
+						<ion-item>
+							<ion-label position="stacked">Hasta</ion-label>
+							<ion-input
+								type="date"
+								[(ngModel)]="filtros.fechaHasta"
+								(ionChange)="filtrarRepartos()">
+							</ion-input>
+						</ion-item>
+					</ion-col>
+				</ion-row>
+			</ion-grid>			
+			<ion-button expand="block" fill="outline" color="medium" (click)="limpiarFiltros()">
+				Limpiar Filtros
+			</ion-button>
+		</div>	
+		<ion-list *ngIf="repartosFiltrados.length > 0; else sinRepartos">
+			<ion-item *ngFor="let r of repartosFiltrados; let i = index" lines="full" routerLink="/repartos/{{r.id}}/details" detail="true">
+				<ion-label>
+					<h2><strong>Reparto No. {{r.id}}</strong></h2>
+					<p><ion-icon slot="start" name="calendar-outline"></ion-icon> Fecha: {{ r.fecha_reg | date:'longDate' }}</p>
+				</ion-label>
+			</ion-item>			
+		</ion-list>
+
+		<ng-template #sinRepartos>
+			<ion-text color="medium">
+				<p class="ion-text-center">No hay repartos registrados.</p>
+			</ion-text>
+		</ng-template>
+	</ion-content>
+</ng-container>
+
+<ng-template #loading>
+  <ion-card class="ion-padding ion-text-center">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando repartos...</p>
+  </ion-card>
+</ng-template>
