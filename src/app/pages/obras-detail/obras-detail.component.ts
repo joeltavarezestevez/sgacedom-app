@@ -6,7 +6,10 @@ import { SgHeaderComponent } from '../../components/sg-header/sg-header.componen
 import { AlertController, NavController } from '@ionic/angular';
 import { ObrasService } from '../../services/obras.service';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline } from 'ionicons/icons';
+import { arrowBackOutline, documentTextOutline, attachOutline } from 'ionicons/icons';
+import { ModalController } from '@ionic/angular';
+import { Browser } from '@capacitor/browser';
+import { ImageViewerComponent } from '../../components/image-viewer/image-viewer.component';    
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -18,15 +21,18 @@ import { firstValueFrom } from 'rxjs';
 })
 export class ObrasDetailComponent  implements OnInit {
   obra: any;
-
+  urlBase = 'https://app.sgacedom.org';
   constructor(
     private obrasService: ObrasService,
     private alertCtrl: AlertController,
     private navCtrl: NavController,
+    private modalCtrl: ModalController,
     private route: ActivatedRoute
   ) {
     addIcons({
-      'arrow-back-outline': arrowBackOutline
+      'arrow-back-outline': arrowBackOutline,
+      'document-text-outline': documentTextOutline,
+      'attach-outline': attachOutline      
     });    
   }
 
@@ -50,7 +56,63 @@ export class ObrasDetailComponent  implements OnInit {
         this.navCtrl.navigateBack('/obras');
       }
     });
-  } 
+  }
+
+  getProfesionLabel(id: number): string {
+    return this.profesionMap[id] || '—';
+  }
+  
+  onArchivoClick(filename: string) {
+    if (this.isImage(filename)) {
+      this.verImagen(filename);
+      return;
+    }
+
+    if (this.isPdf(filename)) {
+      this.verDocumento('Documento', filename);
+      return;
+    }
+
+    this.verDocumento('Documento', filename);
+  }
+
+  async verImagen(filename: string) {
+    const modal = await this.modalCtrl.create({
+      component: ImageViewerComponent,
+      componentProps: {
+        imageUrl: this.getFileUrl(filename)
+      },
+      showBackdrop: true,
+      backdropDismiss: true
+    });
+
+    await modal.present();
+  }
+
+  async verDocumento(tipo: string, filename: string) {
+    const url = this.urlBase + filename;
+
+    await Browser.open({
+      url,
+      presentationStyle: 'fullscreen'
+    });
+  }  
+
+  getFileUrl(file: string): string {
+    return file.startsWith('http') ? file : this.urlBase + file;
+  }
+
+  getFileExtension(file: string): string {
+    return file.split('.').pop()?.toLowerCase() || '';
+  }
+
+  isImage(file: string): boolean {
+    return ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(this.getFileExtension(file));
+  }
+
+  isPdf(file: string): boolean {
+    return this.getFileExtension(file) === 'pdf';
+  }  
 
   estadoTextoMap: Record<number, string> = {
     1: 'Nueva',
@@ -74,9 +136,4 @@ export class ObrasDetailComponent  implements OnInit {
     5: 'Arreglista',
     6: 'Adaptador',
   };
-
-  getProfesionLabel(id: number): string {
-    return this.profesionMap[id] || '—';
-  }
-  
 }

@@ -22,6 +22,9 @@ log.txt
 /www
 /platforms
 /plugins
+android/app/build/
+ios/App/Pods/
+ios/App/build/
 
 # Compiled output
 /dist

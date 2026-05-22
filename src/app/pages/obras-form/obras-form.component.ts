@@ -6,13 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SgHeaderComponent } from '../../components/sg-header/sg-header.component';
 import { ObrasService } from '../../services/obras.service';
+import { PerfilService } from '../../services/perfil.service';
 import { CatalogsService } from '../../services/catalogs.service';
 import { CondicionesModalComponent } from '../../components/condiciones-modal/condiciones-modal.component';
 import { firstValueFrom } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { checkmarkOutline, closeOutline, calendarOutline } from 'ionicons/icons';
+import { checkmarkOutline, closeOutline, calendarOutline, attachOutline } from 'ionicons/icons';
 import { SearchableSelectComponent } from '../../components/searchable-select/searchable-select.component';
-
 
 @Component({
   standalone: true,
@@ -24,10 +24,13 @@ import { SearchableSelectComponent } from '../../components/searchable-select/se
 export class ObrasFormComponent implements OnInit {
   @ViewChild(IonModal) modal!: IonModal;
   obra: any = {};
+  perfil: any = {};
   editoras:any = [];
   generos:any = [];
   isEdit = false;
   mostrarErrorCondiciones = false;
+  contrato_coautores_url!: File;
+  mostrarErrorContrato = false;
   lugaresPublicacion = [
     { value: 'Radio', label: 'Radio' },
     { value: 'TV', label: 'Televisión' },
@@ -44,6 +47,7 @@ export class ObrasFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private obrasService: ObrasService,
+    private perfilService: PerfilService,
     private catalogsService: CatalogsService,
     private navCtrl: NavController,
     private modalCtrl: ModalController,
@@ -52,6 +56,7 @@ export class ObrasFormComponent implements OnInit {
     private loadingCtrl: LoadingController
   ) {
     addIcons({
+      'attach-outline': attachOutline,
       'checkmark-outline': checkmarkOutline,
       'close-outline': closeOutline,
       'calendar-outline': calendarOutline
@@ -61,6 +66,14 @@ export class ObrasFormComponent implements OnInit {
   async ngOnInit() {
     this.editoras = await this.catalogsService.getEditoras();
     this.generos = await this.catalogsService.getGeneros();
+    this.perfilService.getProfile().subscribe({
+      next: (data) => {
+        this.perfil = data;
+        const nombre = data?.name || '';
+        const apellido = data?.lastname || '';
+        this.obra.autor = `${nombre} ${apellido}`.trim();
+      }
+    })
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
@@ -72,6 +85,8 @@ export class ObrasFormComponent implements OnInit {
         usa_ia: !!data.usa_ia,
         porcentaje_ia: data.porcentaje_ia ?? null,
         lpublico: data.lpublico ? data.lpublico.split(',').map((v: string) => v.trim()) : [],
+        colaboradores: Array.isArray(data.colaboradores) ? data.colaboradores : [],
+        contrato_coautores_url: data.contrato_coautores_url || '', // <-- importante        
         aceptaCondiciones: true,
       };
     } else {
@@ -84,7 +99,7 @@ export class ObrasFormComponent implements OnInit {
         interpretes: '',
         catalogo: '',
         comentarios: '',
-
+        contrato_coautores_url: '',
         usa_ia: false,
         uso_ia: '',
         porcentaje_ia: null,
@@ -95,39 +110,80 @@ export class ObrasFormComponent implements OnInit {
     }
   }
 
-  async onSubmit() {
-    if (!this.isEdit && !this.obra.aceptaCondiciones) {
-      this.mostrarErrorCondiciones = true;
-      return;
+  onEditoraSelected(editora: any) {
+    // Guardas lo que tú necesitas
+    this.obra.editora_id = editora?.id ?? null;
+    this.obra.editora_nombre = editora?.nombre ?? '';
+  }
+
+  onGeneroSelected(item: any) {
+    // si "generos" es array de objetos { id, nombre }
+    this.obra.genero = item?.nombre ?? item;   // si viniera string, cae en item
+    this.obra.genero_id = item?.id ?? null;    // opcional si necesitas id
+  }
+
+  onContratoSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file: File = input.files?.[0];
+      this.contrato_coautores_url = input.files?.[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.obra.contrato_coautores_url = reader.result as string; // base64
+      };
+      reader.readAsDataURL(file);      
     }
+  }
+
+  async onSubmit() {
 
     const loading = await this.loadingCtrl.create({
       message: 'Registrando obra...',
       backdropDismiss: false
     });
 
-    await loading.present(); 
+    await loading.present();
 
-    const payload = {
-      titulo: this.obra.titulo,
-      titulos: this.obra.titulos,
-      genero: this.obra.genero,
-      genero_otro_descripcion: this.obra.genero == 'Otro' ? this.obra.genero_otro_descripcion : null,
-      duracion: this.obra.duracion,
-      fejecucion: this.obra.fejecucion,
-      lpublico: Array.isArray(this.obra.lpublico) ? this.obra.lpublico.join(',') : null,
-      editora_id: this.obra.editora_id,
-      editora_otra_descripcion: this.obra.editora_id == 0 ? this.obra.editora_otra_descripcion : null,
-      colaboradores: this.obra.colaboradores,
-      usa_ia: this.obra.usa_ia ? 1 : 0,
-      uso_ia: this.obra.usa_ia ? this.obra.uso_ia : null,
-      porcentaje_ia: this.obra.usa_ia ? this.obra.porcentaje_ia : null,
-      nocatalogo: this.obra.nocatalogo,
-      interpretes: this.obra.interpretes,
-      comentario: this.obra.comentarios
-    };
-    
     try {
+
+      // 🔹 1) Validaciones básicas
+      const hayCoautores = (this.obra.colaboradores?.length || 0) > 0;
+
+      if (hayCoautores && !this.contrato_coautores_url && !this.isEdit) {
+        this.mostrarErrorContrato = true;
+        await loading.dismiss();
+        return;
+      }
+
+      // 🔹 2) SUBIR CONTRATO (AQUÍ VA)
+      if (hayCoautores && this.contrato_coautores_url) {
+        const res = await firstValueFrom(
+          this.obrasService.uploadFile(this.contrato_coautores_url)
+        );
+
+        this.obra.contrato_coautores_url = res.file;
+      }
+
+      const payload = {
+        titulo: this.obra.titulo,
+        titulos: this.obra.titulos,
+        genero: this.obra.genero,
+        genero_otro_descripcion: this.obra.genero == 'Otro' ? this.obra.genero_otro_descripcion : null,
+        duracion: this.obra.duracion,
+        fejecucion: this.obra.fejecucion,
+        lpublico: Array.isArray(this.obra.lpublico) ? this.obra.lpublico.join(',') : null,
+        editora_id: this.obra.editora_id,
+        editora_otra_descripcion: this.obra.editora_id == 0 ? this.obra.editora_otra_descripcion : null,
+        colaboradores: this.obra.colaboradores,
+        usa_ia: this.obra.usa_ia ? 1 : 0,
+        uso_ia: this.obra.usa_ia ? this.obra.uso_ia : null,
+        porcentaje_ia: this.obra.usa_ia ? this.obra.porcentaje_ia : null,
+        nocatalogo: this.obra.nocatalogo,
+        interpretes: this.obra.interpretes,
+        comentario: this.obra.comentarios,
+        contrato_coautores_url: hayCoautores ? this.obra.contrato_coautores_url : null
+      };
+
       if (this.isEdit) {
         await firstValueFrom(this.obrasService.update(this.obra.id, payload));
       } else {
@@ -141,13 +197,14 @@ export class ObrasFormComponent implements OnInit {
       toast.present();
 
       this.navCtrl.navigateBack('/obras');
+
     } catch (err) {
-      const alert = await this.alertCtrl.create({
-        header: 'Error',
-        message: 'No se pudo guardar la obra.',
-        buttons: ['OK'],
+      const toast = await this.toastCtrl.create({
+        message: 'Error al guardar la obra',
+        duration: 3000,
+        color: 'danger'
       });
-      await alert.present();
+      toast.present();
     } finally {
       await loading.dismiss();
     }
@@ -178,6 +235,5 @@ export class ObrasFormComponent implements OnInit {
     const { data } = await modal.onDidDismiss<boolean>();
     this.obra.aceptaCondiciones = data === true;
   }
-
 
 }

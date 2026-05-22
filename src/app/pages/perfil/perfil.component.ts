@@ -198,12 +198,16 @@ export class PerfilComponent implements OnInit {
         const res = await firstValueFrom(
           this.perfilService.uploadPhoto(this.nuevaFoto)
         );
-        console.log(res);
-        this.onFotoActualizada(res.foto);
-        this.perfil.foto = res.foto;
+        
+        this.perfil.foto = res.file;
+        this.onFotoActualizada(res.file);
       }
       console.log(this.perfil);
-      await firstValueFrom(this.perfilService.updateProfile(this.perfil));
+      const payload = {
+        ...this.perfil,
+        foto: this.perfil.foto?.replace('https://app.sgacedom.org', '')
+      };      
+      await firstValueFrom(this.perfilService.updateProfile(payload));
 
       // 2️⃣ Cambiar contraseña (solo si se escribió algo)
       if (this.passwordForm.new) {

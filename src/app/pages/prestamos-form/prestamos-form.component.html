@@ -1,0 +1,59 @@
+<sg-header [title]="isEdit ? 'Editar Solicitud' : 'Solicitar Préstamo'"></sg-header>
+
+<ion-content class="ion-padding">
+  <ion-text>
+    <h2>Formulario de Pr&eacute;stamo</h2>
+    <ion-chip color="secondary">
+      Este formulario es para solicitar asistencia mediante un pr&eacute;stamo por parte de SGACEDOM. Complete los campos requeridos.
+    </ion-chip>
+  </ion-text>
+  <br>
+  <ion-note color="danger" class="ion-margin-top ion-padding"><strong>*</strong> Campos obligatorios</ion-note>
+  <form #ayudaForm="ngForm" (ngSubmit)="onSubmit()">
+    <ion-list lines="full">
+      <ion-item-divider color="light">
+        <ion-label><strong>Motivo <ion-text color="danger">*</ion-text></strong></ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-textarea [(ngModel)]="prestamo.motivo_prestamo" name="motivo_prestamo" placeholder="Describa su situación o necesidad" required></ion-textarea>
+      </ion-item>
+
+      <ion-item-divider color="light">
+        <ion-label><strong>Comentario para el consejo directivo</strong></ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-textarea [(ngModel)]="prestamo.coment_directiva" name="coment_directiva"></ion-textarea>
+      </ion-item>
+
+      <ion-item-divider color="light">
+        <ion-label><strong>Documento de Soporte</strong></ion-label>
+      </ion-item-divider>
+      <div class="ion-margin-vertical ion-padding-horizontal">
+        <ion-button expand="block" shape="round" fill="outline" (click)="fileInput.click()" color="medium">
+          <ion-icon name="attach-outline" slot="start"></ion-icon>
+          Seleccionar Archivo
+        </ion-button>
+        <input type="file" hidden #fileInput (change)="onFileSelected($event)" />
+        <ion-text color="medium" *ngIf="prestamo.arc_soporte">
+          <p class="ion-text-center">1 archivo seleccionado</p>
+        </ion-text>
+      </div>
+
+      <ion-item *ngIf="prestamo.arc_soporte">
+        <ion-thumbnail slot="start">
+          <img [src]="prestamo.arc_soporte" />
+        </ion-thumbnail>
+        <ion-label>Vista previa</ion-label>
+      </ion-item>  
+
+      <ion-button expand="block" type="submit" color="primary" class="ion-margin-top" [disabled]="!ayudaForm.valid">
+        {{ isEdit ? 'Actualizar Solicitud' : 'Enviar Solicitud' }}
+        <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+      </ion-button>
+      <ion-button expand="block" type="button" color="danger" class="ion-margin-top ion-margin-bottom" routerLink="/ayudas">
+        Cancelar
+        <ion-icon slot="start" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-list>
+  </form>
+</ion-content>

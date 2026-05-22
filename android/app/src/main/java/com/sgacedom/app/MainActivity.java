@@ -1,4 +1,4 @@
-package org.sgacedom.app;
+package com.sgacedom.app;
 
 import com.getcapacitor.BridgeActivity;
 

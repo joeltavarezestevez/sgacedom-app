@@ -34,6 +34,11 @@
             📰 <ion-label> Noticias</ion-label>
             </ion-item>
 
+            <ion-item routerLink="/monitoreos" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+            📡 <ion-label> Monitoreos</ion-label>
+            </ion-item>
+
             <ion-item routerLink="/obras" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
             [routerLinkActiveOptions]="{ exact: true }">
             🎼 <ion-label> Mis Obras</ion-label>
@@ -46,12 +51,17 @@
 
             <ion-item routerLink="/reclamaciones" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
             [routerLinkActiveOptions]="{ exact: true }">
-              📄 <ion-label> Reclamaciones</ion-label>
+              📄 <ion-label> Mis Reclamaciones</ion-label>
             </ion-item>
+
+            <ion-item routerLink="/prestamos" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }">
+              🏦 <ion-label> Mis Pr&eacute;stamos</ion-label>
+            </ion-item>            
 
             <ion-item routerLink="/ayudas" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
             [routerLinkActiveOptions]="{ exact: true }">
-            🤝 <ion-label> Previsión Social</ion-label>
+            🤝 <ion-label> Previsi&oacute;n Social</ion-label>
             </ion-item>
 
             <ion-item routerLink="/reporte-eventos" routerDirection="forward" class="ion-margin-vertical" routerLinkActive="selected"
@@ -69,7 +79,7 @@
             ✉️ <ion-label> Contacto</ion-label>
             </ion-item>
             <ion-item (click)="cerrarSesion()">
-              🚪 <ion-label> Cerrar Sesión</ion-label>
+              🚪 <ion-label> Cerrar Sesi&oacute;n</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>

@@ -20,7 +20,7 @@ export class PrevisionSocialFormComponent implements OnInit {
   prevision: any = {};
   isEdit = false;
   arc_soporte!: File;
-  tiposAyuda = ['Médica', 'Fallecimiento', 'Préstamo', 'Otro'];
+  tiposAyuda = ['Médica', 'Fallecimiento', 'Otro'];
 
   constructor(
     private route: ActivatedRoute,

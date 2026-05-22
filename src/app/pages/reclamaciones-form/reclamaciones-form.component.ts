@@ -31,7 +31,7 @@ export class ReclamacionesFormComponent  implements OnInit {
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private navCtrl: NavController) {
-    addIcons({
+    addIcons({ 
       'checkmark-outline': checkmarkOutline,
       'close-outline': closeOutline
     });    
@@ -92,12 +92,11 @@ export class ReclamacionesFormComponent  implements OnInit {
 
       youtube: this.reclamacion.youtube ? 1 : 0,
       spotify: this.reclamacion.spotify ? 1 : 0,
-      apple: this.reclamacion.apple ? 1 : 0,
+      applemusic: this.reclamacion.applemusic ? 1 : 0,
       amazon: this.reclamacion.amazon ? 1 : 0,
-      cd: this.reclamacion.cd ? 1 : 0,
-      cassette: this.reclamacion.cassette ? 1 : 0,
       video: this.reclamacion.video ? 1 : 0,
       otros: this.reclamacion.otros ? 1 : 0,
+      descripcion_otro: this.reclamacion.otros ? this.reclamacion.descripcion_otro : null
     };
 
     try {
@@ -158,10 +157,9 @@ export class ReclamacionesFormComponent  implements OnInit {
       spotify: false,
       apple: false,
       amazon: false,
-      cd: false,
-      cassette: false,
       video: false,
-      otros: false
+      otros: false,
+      otromedio: ''
     };
   }  
 }

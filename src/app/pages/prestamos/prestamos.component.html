@@ -1,0 +1,87 @@
+<sg-header title="Préstamos"></sg-header>
+
+<ng-container *ngIf="prestamos; else loading">
+	<ion-content class="ion-padding" color="light">
+		<ion-button expand="block" routerLink="/prestamos/new" color="primary">
+			➕ Solicitar Pr&eacute;stamo
+		</ion-button>
+		<h3 class="ion-padding-top">Mis Solicitudes de Préstamos</h3>
+		<!-- Botón para mostrar u ocultar los filtros -->
+		<ion-button expand="block" fill="outline" (click)="mostrarFiltros = !mostrarFiltros">
+			<ion-icon *ngIf="mostrarFiltros" slot="start" name="funnel-outline"></ion-icon>
+			<ion-icon *ngIf="!mostrarFiltros"slot="start" name="funnel"></ion-icon>
+			{{ mostrarFiltros ? 'Ocultar filtros' : 'Mostrar filtros' }}
+		</ion-button>
+
+		<!-- Filtros -->
+		<div *ngIf="mostrarFiltros" class="ion-padding">	
+			<h4 class="">Filtros</h4>
+			<ion-item>
+				<ion-label position="stacked">Estado</ion-label>
+				<ion-select [(ngModel)]="filtros.estado" interface="popover" (ionChange)="filtrarPrestamos()" placeholder="Selecciona una opción">
+					<ion-select-option value="1">Nueva</ion-select-option>
+					<ion-select-option value="2">Revisada</ion-select-option>
+					<ion-select-option value="3">Completada</ion-select-option>
+					<ion-select-option value="4">Cancelada</ion-select-option>	    
+				</ion-select>
+			</ion-item>
+			<ion-grid class="ion-no-padding">
+				<ion-row>
+					<ion-col size="6">
+						<ion-item>
+							<ion-label position="stacked">Desde</ion-label>
+							<ion-input
+								type="date"
+								[(ngModel)]="filtros.fechaDesde"
+								(ionChange)="filtrarPrestamos()">
+							</ion-input>
+						</ion-item>
+					</ion-col>
+					<ion-col size="6">
+						<ion-item>
+							<ion-label position="stacked">Hasta</ion-label>
+							<ion-input
+								type="date"
+								[(ngModel)]="filtros.fechaHasta"
+								(ionChange)="filtrarPrestamos()">
+							</ion-input>
+						</ion-item>
+					</ion-col>
+				</ion-row>
+			</ion-grid>			
+			<ion-button expand="block" fill="outline" color="medium" (click)="limpiarFiltros()">
+				Limpiar Filtros
+			</ion-button>
+		</div>	
+		<ion-list *ngIf="prestamosFiltradas.length > 0; else sinPrestamos">
+			<ion-item *ngFor="let prestamo of prestamosFiltradas; let i = index" lines="full" routerLink="/prestamos/{{prestamo.id
+}}/details" detail="true">
+				<ion-label>
+					<h2><strong>Solicitud No. {{ prestamo.id }}</strong></h2>
+					<p><small>Fecha: {{ prestamo.created_at | date:'longDate' }}</small></p>
+				</ion-label>
+
+				<!-- Badge alineado a la derecha -->
+				<ion-badge
+					slot="end"
+					[color]="estadoColorMap[+prestamo.estado]"
+					class="ion-text-capitalize">
+					{{ estadoTextoMap[+prestamo.estado] }}
+				</ion-badge>
+			</ion-item>
+		</ion-list>
+
+		<ng-template #sinPrestamos>
+			<ion-text color="medium">
+				<p class="ion-text-center">No tiene solicitudes de pr&eacute;stamo registradas.</p>
+			</ion-text>
+		</ng-template>
+	</ion-content>
+</ng-container>
+
+<ng-template #loading>
+	<ion-card class="ion-padding ion-text-center">
+		<ion-spinner name="crescent" color="primary"></ion-spinner>
+		<p>Cargando solicitudes...</p>
+	</ion-card>
+</ng-template>

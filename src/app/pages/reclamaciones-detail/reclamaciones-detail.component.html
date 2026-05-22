@@ -104,27 +104,46 @@
         </ion-item>        
       </ion-item-group>
 
-      <ion-item-group *ngIf="reclamacion.cd || reclamacion.cassette || reclamacion.video || reclamacion.otros">
+      <ion-item-group *ngIf="reclamacion.youtube || reclamacion.spotify || reclamacion.apple || reclamacion.amazon || reclamacion.video || reclamacion.otros">
         <ion-item-divider color="light"><strong>Otros Formatos</strong></ion-item-divider>
         <ion-row>
-          <ion-col size="6"*ngIf="reclamacion.cd">
+          <ion-col size="6" *ngIf="reclamacion.youtube">
             <ion-item lines="none">
-              <ion-label>📀 CD</ion-label>
+              <ion-icon slot="start" name="logo-youtube"></ion-icon>
+              <ion-label>Youtube</ion-label>
             </ion-item>
           </ion-col>
-          <ion-col size="6"*ngIf="reclamacion.cassette">
+
+          <ion-col size="6" *ngIf="reclamacion.spotify">
             <ion-item lines="none">
-              <ion-label>📼 Cassette</ion-label>
+              <ion-icon slot="start" src="./assets/icons/logo_spotify.svg"></ion-icon>
+              <ion-label>Spotify</ion-label>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6" *ngIf="reclamacion.applemusic">
+            <ion-item lines="none">
+              <ion-icon slot="start" name="logo-apple"></ion-icon>
+              <ion-label>Apple</ion-label>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6" *ngIf="reclamacion.amazon">
+            <ion-item lines="none">
+              <ion-icon slot="start" name="logo-amazon"></ion-icon>
+              <ion-label>Amazon</ion-label>
             </ion-item>
           </ion-col>
           <ion-col size="6"*ngIf="reclamacion.video">
             <ion-item lines="none">
-              <ion-label>🎞️ Video</ion-label>
+              <ion-icon slot="start" name="videocam"></ion-icon>
+              <ion-label>Video</ion-label>
             </ion-item>
           </ion-col>  
           <ion-col size="6"*ngIf="reclamacion.otros">
             <ion-item lines="none">
-              <ion-label>📝 Otros</ion-label>
+              <ion-icon slot="start" name="document"></ion-icon>
+              <ion-label>Otros ({{reclamacion.descripcion_otro}})</ion-label>
             </ion-item>
           </ion-col>                                                          
         </ion-row>

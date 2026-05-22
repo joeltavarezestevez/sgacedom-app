@@ -135,6 +135,13 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  async registroSocio() {
+    await Browser.open({
+      url: 'https://sgacedom.org/wp-content/uploads/2022/03/Formulario-de-Solicitud-de-Adhesion.pdf',
+      presentationStyle: 'fullscreen'
+    });
+  }  
+
   async loginWithBiometrics() {
     try {
     // 1. Verificar biometría

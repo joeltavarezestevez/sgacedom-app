@@ -11,6 +11,10 @@
         <ion-label><strong>Datos Generales de la Obra</strong></ion-label>
       </ion-item-divider>        
       <ion-item>
+        <ion-label position="stacked">Autor <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input [(ngModel)]="obra.autor" name="autor" placeholder="Autor de la obra" required readonly></ion-input>
+      </ion-item>
+      <ion-item>
         <ion-label position="stacked">T&iacute;tulo Original <ion-text color="danger">*</ion-text></ion-label>
         <ion-input [(ngModel)]="obra.titulo" name="titulo" placeholder="Introduzca el título original de su obra" required></ion-input>
       </ion-item>
@@ -19,12 +23,22 @@
         <ion-label position="stacked">Otros T&iacute;tulos</ion-label>
         <ion-input [(ngModel)]="obra.titulos" name="titulos" placeholder="Introduzca otros títulos separados por coma (si aplica)"></ion-input>
       </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Int&eacute;rprete(s)</ion-label>
+        <ion-input [(ngModel)]="obra.interpretes" name="interpretes" placeholder="Intérprete(s)"></ion-input>
+      </ion-item>      
       <ion-item (click)="select.open()">
         <ion-label position="stacked">
           Género <ion-text color="danger">*</ion-text>
         </ion-label>
-        <app-searchable-select title="Seleccione un género" [data]="generos" itemTextField="nombre" #select></app-searchable-select>
-        <ion-text *ngIf="obra.genero">
+        <app-searchable-select
+          title="Seleccione un género"
+          [data]="generos"
+          itemTextField="nombre"
+          (valueChange)="onGeneroSelected($event)"
+          #select>
+        </app-searchable-select>
+        <ion-text>
           {{ obra.genero || 'Seleccione una opción' }}
         </ion-text>
       </ion-item>
@@ -48,15 +62,20 @@
           <ion-select-option *ngFor="let l of lugaresPublicacion" [value]="l.value"> {{ l.label }} </ion-select-option>
         </ion-select>
       </ion-item>      
-      <ion-item>
+      <ion-item (click)="selEditora.open()">
         <ion-label position="stacked">Editora</ion-label>
-        <ion-select [(ngModel)]="obra.editora_id" name="editora_id" placeholder="Seleccione una opción">
-          <ion-select-option *ngFor="let e of editoras" [value]="e.id">
-            {{ e.nombre }}
-          </ion-select-option>
-          <ion-select-option value="0">Otra</ion-select-option>
-        </ion-select>
-      </ion-item>
+        <app-searchable-select
+          #selEditora
+          title="Seleccione una editora"
+          [data]="editoras"
+          itemTextField="nombre"
+          (valueChange)="onEditoraSelected($event)">
+        </app-searchable-select>
+
+        <ion-text>
+          {{ obra.editora_nombre || 'Seleccione una opción' }}
+        </ion-text>
+      </ion-item>      
       <ion-item *ngIf="obra.editora_id == 0">
         <ion-label position="stacked">Escriba el nombre de la editora <ion-text color="danger">*</ion-text></ion-label>
         <ion-input [(ngModel)]="obra.editora_otra_descripcion" name="editora_otra_descripcion" placeholder="Otra Editora" *ngIf="obra.editora_id == 0" required></ion-input>
@@ -110,6 +129,32 @@
           ➕ Agregar co-autor
         </ion-button>
       </ion-list>
+      <div class="ion-margin-vertical ion-padding-horizontal" *ngIf="obra.colaboradores?.length > 0">
+        <ion-label position="stacked">
+          Contrato de co-autoría <ion-text color="danger">*</ion-text>
+        </ion-label>
+
+        <ion-button expand="block" shape="round" fill="outline" (click)="contratoInput.click()" color="medium">
+          <ion-icon name="attach-outline" slot="start"></ion-icon>
+          Seleccionar Archivo
+        </ion-button>
+
+        <input
+          type="file"
+          accept="image/*,application/pdf"
+          hidden
+          #contratoInput
+          (change)="onContratoSelected($event)"
+          required />
+
+        <ion-text color="medium" *ngIf="contrato_coautores_url">
+          <p class="ion-text-center">1 archivo seleccionado</p>
+        </ion-text>
+
+        <ion-text color="danger" *ngIf="mostrarErrorContrato">
+          <small>Debe adjuntar el contrato cuando existan co-autores.</small>
+        </ion-text>
+      </div>      
       <ion-item-divider color="light">
         <ion-label><strong>Uso de Inteligencia Artificial</strong></ion-label>
       </ion-item-divider>
@@ -142,11 +187,6 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Int&eacute;rprete(s)</ion-label>
-        <ion-input [(ngModel)]="obra.interpretes" name="interpretes" placeholder="Intérprete(s)"></ion-input>
-      </ion-item>
-
-      <ion-item>
         <ion-label position="stacked">Comentarios</ion-label>
         <ion-textarea [(ngModel)]="obra.comentario" name="comentario" placeholder="Comentarios"></ion-textarea>
       </ion-item>
@@ -167,7 +207,7 @@
       <small>Debe aceptar las condiciones antes de continuar.</small>
     </ion-text>
 
-    <ion-button expand="block" type="submit" color="primary" class="ion-margin-top" [disabled]="!obraForm.valid || (!isEdit && !obra.aceptaCondiciones)">
+    <ion-button expand="block" type="submit" color="primary" class="ion-margin-top" [disabled]="!obraForm.valid || (!isEdit && !obra.aceptaCondiciones) || (obra.colaboradores?.length > 0 && !obra.contrato_coautores_url)">
       {{ isEdit ? 'Actualizar Obra' : 'Registrar Obra' }}
       <ion-icon slot="start" name="checkmark-outline"></ion-icon>
     </ion-button>

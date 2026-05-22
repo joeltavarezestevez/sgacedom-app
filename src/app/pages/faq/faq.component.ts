@@ -3,6 +3,7 @@ import { SgHeaderComponent } from '../../components/sg-header/sg-header.componen
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
+import { Browser } from '@capacitor/browser';
 
 @Component({
   selector: 'app-faq',
@@ -24,23 +25,23 @@ export class FaqComponent  implements OnInit {
     },
     {
       pregunta: '¿Cómo puedo cambiar mi contraseña?',
-      respuesta: 'Ingrese a la sección de configuración desde el menú superior. Coloque su contraseña actual, luego su nueva contraseña dos veces, y presione "Actualizar".'
+      respuesta: 'Ingrese a la sección de "Mi Perfil" desde el menú lateral. Dirígase a la sección de Cambio de Contraseña. Coloque su contraseña actual, luego su nueva contraseña dos veces, y presione "Guardar".'
     },
     {
       pregunta: '¿Cómo puedo hacer una reclamación?',
-      respuesta: 'Vaya al menú de "Reclamaciones" y seleccione "Realizar Reclamación". Llene el formulario y un operador evaluará su caso.'
+      respuesta: 'Vaya al menú de "Reclamaciones" y seleccione "Registrar Reclamación". Llene el formulario y un operador evaluará su caso.'
     },
     {
       pregunta: '¿Cómo puedo saber el estado de mi reclamación?',
-      respuesta: 'Ingrese al menú "Reclamaciones" y seleccione "Listado de Reclamaciones" para verificar el estado de su caso.'
+      respuesta: 'Ingrese al menú "Reclamaciones" para verificar el estado de cada uno de sus casos.'
     },
     {
       pregunta: '¿Cómo registro mi obra?',
-      respuesta: 'Seleccione "Registra tu Obra" desde el menú y complete el formulario. Toda la información será verificada por el personal.'
+      respuesta: 'Ingrese al menú y seleccione "Mis Obras". Seleccione "Registra Obra" en la parte superior y complete el formulario. Toda la información será verificada por el personal.'
     },
     {
       pregunta: '¿Cómo sé cuándo mi obra fue aceptada?',
-      respuesta: 'Vaya a "Listado de Obras" para consultar el estado de su obra registrada.'
+      respuesta: 'Vaya a "Mis Obras" para consultar el estado de su obra registrada.'
     },
     {
       pregunta: '¿Cómo me puedo poner en contacto con algún operador?',
@@ -48,8 +49,15 @@ export class FaqComponent  implements OnInit {
     },
     {
       pregunta: '¿Cómo veo el registro de los repartos anteriores?',
-      respuesta: 'Desde el menú de "Listado de Repartos" podrá consultar todos los repartos realizados anteriormente.'
+      respuesta: 'Desde el menú "Mis Repartos" podrá consultar todos los repartos realizados anteriormente.'
     },
   ];
+
+  async openWhatsapp() {
+    await Browser.open({
+      url: 'https://wa.me/18496546579',
+      presentationStyle: 'fullscreen'
+    });
+  }   
 }
 

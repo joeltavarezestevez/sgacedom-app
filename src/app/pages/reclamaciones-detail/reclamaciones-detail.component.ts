@@ -6,6 +6,7 @@ import { SgHeaderComponent } from '../../components/sg-header/sg-header.componen
 import { ReclamacionService } from 'src/app/services/reclamacion.service';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
+import { logoYoutube, logoApple, logoAmazon, videocam, document } from 'ionicons/icons';
 
 @Component({
   selector: 'app-reclamaciones-detail',
@@ -23,6 +24,11 @@ export class ReclamacionesDetailComponent  implements OnInit {
     private alertCtrl: AlertController
   ) {
     addIcons({
+      'logo-youtube': logoYoutube,
+      'logo-apple': logoApple,
+      'logo-amazon': logoAmazon,
+      'videocam': videocam,
+      'document': document,
       'arrow-back-outline': arrowBackOutline
     });       
   }

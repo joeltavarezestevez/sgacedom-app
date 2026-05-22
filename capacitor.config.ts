@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'org.sgacedom.app',
+  appId: 'com.sgacedom.app',
   appName: 'SGACEDOM App',
   webDir: 'www',
   plugins: {

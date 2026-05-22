@@ -1,0 +1,64 @@
+<sg-header title="Detalle del Monitoreo"></sg-header>
+
+<ion-content class="ion-padding" *ngIf="monitoreo; else loading">
+  <ion-card>
+    <ion-card-header>
+      <ion-item lines="none">
+        <ion-label>
+          <ion-card-title class="ion-text-wrap ion-padding-bottom">Monitoreo No. {{ monitoreo?.id }}</ion-card-title>
+          <ion-card-subtitle class="ion-text-wrap" style="font-size: 0.85rem;">{{ monitoreo?.titulo }}</ion-card-subtitle>
+          <p><ion-icon slot="start" name="calendar-outline"></ion-icon> <strong> Año:</strong> {{ monitoreo?.anio }} | <strong>Mes:</strong> {{ mesMap[monitoreo.mes] }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-card-header>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Documentos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+
+        <!-- 📄 Archivo -->
+        <ion-item button detail (click)="onArchivoClick(monitoreo.archivo_url)" *ngIf="monitoreo.archivo_url">
+          <ion-thumbnail slot="start">
+            <!-- 🖼 IMAGEN -->
+            <ng-container *ngIf="isImage(monitoreo.archivo_url)">
+              <img [src]="getFileUrl(monitoreo.archivo_url)" alt="Documento" />
+            </ng-container>
+            <!-- 📄 PDF -->
+            <ng-container *ngIf="isPdf(monitoreo.archivo_url)">
+              <div class="icon-thumb pdf">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+            </ng-container>
+            <!-- 📦 OTRO -->
+            <ng-container *ngIf="!isImage(monitoreo.archivo_url) && !isPdf(monitoreo.archivo_url)">
+              <div class="icon-thumb">
+                <ion-icon name="attach-outline"></ion-icon>
+              </div>
+            </ng-container>
+          </ion-thumbnail>
+          <ion-label>
+            <h3>📄 Documento</h3>
+            <p *ngIf="isImage(monitoreo.archivo_url)">Ver Imagen</p>
+            <p *ngIf="isPdf(monitoreo.archivo_url)">Ver Documento PDF</p>
+            <p *ngIf="!isImage(monitoreo.archivo_url) && !isPdf(monitoreo.archivo_url)">Ver Documento</p>
+          </ion-label>
+        </ion-item>     
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" color="medium" routerLink="/monitoreos" class="ion-padding-top">
+    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+    Volver
+  </ion-button>
+</ion-content>
+
+<ng-template #loading>
+  <ion-card class="ion-padding ion-text-center">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando monitoreo...</p>
+  </ion-card>
+</ng-template>

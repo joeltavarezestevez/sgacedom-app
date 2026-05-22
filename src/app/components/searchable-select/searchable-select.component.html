@@ -1,18 +1,74 @@
-<ion-modal [isOpen]="isOpen">
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-        <ion-button (click)="cancel()">Cancelar</ion-button>
-      </ion-buttons>
-      <ion-title>{{title}}</ion-title>
-      <ion-buttons slot="end">
-        <ion-button (click)="confirm()">Seleccionar</ion-button>
-      </ion-buttons>      
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-item *ngFor="let item of data">
-      <ion-label>{{ item[itemTextField] }}</ion-label>
-    </ion-item>
-  </ion-content>
+<ion-modal [isOpen]="isOpen" (didDismiss)="cancel()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Cancelar</ion-button>
+        </ion-buttons>
+
+        <ion-title>{{ title }}</ion-title>
+
+        <ion-buttons slot="end">
+          <ion-button (click)="confirm()">Seleccionar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+
+      <!-- 🔎 Searchbar -->
+      <ion-toolbar>
+        <ion-searchbar
+          [(ngModel)]="searchText"
+          (ionInput)="onSearchChange()"
+          placeholder="Buscar..."
+          debounce="200">
+        </ion-searchbar>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+
+        <!-- MULTIPLE -->
+        <ng-container *ngIf="multiple; else singleTpl">
+          <ion-item
+            button
+            *ngFor="let item of filteredData; trackBy: trackByIndex"
+            (click)="toggleItem(item)">
+            <ion-label>
+              {{ getLabel(item) || '—' }}
+            </ion-label>
+            <ion-checkbox slot="end" [checked]="isSelected(item)"></ion-checkbox>
+          </ion-item>
+        </ng-container>
+
+        <!-- SINGLE -->
+        <ng-template #singleTpl>
+          <ion-radio-group
+            [(ngModel)]="selectedSingle"
+            (ionChange)="onSingleSelect()">
+
+            <ion-item
+              button
+              *ngFor="let item of filteredData; trackBy: trackByIndex">
+
+              <ion-label>
+                {{ getLabel(item) || '—' }}
+              </ion-label>
+
+              <ion-radio
+                slot="end"
+                [value]="item">
+              </ion-radio>
+
+            </ion-item>
+
+          </ion-radio-group>
+        </ng-template>
+
+        <ion-item *ngIf="filteredData.length === 0">
+          <ion-label color="medium">No hay resultados.</ion-label>
+        </ion-item>
+
+      </ion-list>
+    </ion-content>
+  </ng-template>
 </ion-modal>

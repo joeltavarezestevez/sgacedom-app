@@ -89,6 +89,22 @@ export class PrevisionSocialDetailComponent implements OnInit {
     });
   }  
 
+  getFileUrl(file: string): string {
+    return file.startsWith('http') ? file : this.urlBase + file;
+  }
+
+  getFileExtension(file: string): string {
+    return file.split('.').pop()?.toLowerCase() || '';
+  }
+
+  isImage(file: string): boolean {
+    return ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(this.getFileExtension(file));
+  }
+
+  isPdf(file: string): boolean {
+    return this.getFileExtension(file) === 'pdf';
+  }
+
   TipoAyudaTextoMap: { [key: number]: string } = {
     1: 'Médica',
     2: 'Fallecimiento',
@@ -109,20 +125,4 @@ export class PrevisionSocialDetailComponent implements OnInit {
     3: 'success',
     4: 'danger'
   };
-
-  getFileUrl(file: string): string {
-    return file.startsWith('http') ? file : this.urlBase + file;
-  }
-
-  getFileExtension(file: string): string {
-    return file.split('.').pop()?.toLowerCase() || '';
-  }
-
-  isImage(file: string): boolean {
-    return ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(this.getFileExtension(file));
-  }
-
-  isPdf(file: string): boolean {
-    return this.getFileExtension(file) === 'pdf';
-  }
 }

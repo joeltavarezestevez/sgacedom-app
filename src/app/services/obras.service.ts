@@ -28,4 +28,12 @@ export class ObrasService {
   update(id: string, data: any): Observable<{ success: boolean }> {
     return this.http.put<{ success: boolean }>(`${this.baseUrl}/${id}`,data);
   }
+
+  /** POST foto */
+  uploadFile(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('contrato_coautores_url', file);
+
+    return this.http.post(`${this.baseUrl}/file`, formData);
+  }   
 }

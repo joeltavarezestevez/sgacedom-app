@@ -59,11 +59,10 @@
       	<ion-icon slot="start" name="call-outline"></ion-icon>
         Llamar Ahora
       </ion-button>
-	<ion-button expand="block" fill="outline" color="success" href="https://wa.me/18096896132" target="_blank">
-	  <ion-icon slot="start" color="success" name="logo-whatsapp"></ion-icon>
-	  Escribir por WhatsApp
-	</ion-button>
-
+    	<ion-button expand="block" fill="outline" color="success" (click)="openWhatsapp()">
+    	  <ion-icon slot="start" color="success" name="logo-whatsapp"></ion-icon>
+    	  Escribir por WhatsApp
+    	</ion-button>
     </ion-card-content>
   </ion-card>
 

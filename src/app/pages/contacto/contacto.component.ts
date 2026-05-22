@@ -7,6 +7,7 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { addIcons } from 'ionicons';
 import { businessOutline, callOutline, locationOutline, logoWhatsapp, helpBuoyOutline } from 'ionicons/icons';
+import { Browser } from '@capacitor/browser';
 
 @Component({
   selector: 'app-contacto',
@@ -34,4 +35,12 @@ export class ContactoComponent  implements OnInit {
   }
 
   ngOnInit() {}
+
+  async openWhatsapp() {
+    await Browser.open({
+      url: 'https://wa.me/18496546579',
+      presentationStyle: 'fullscreen'
+    });
+  }  
 }
+

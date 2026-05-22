@@ -110,11 +110,11 @@
         <ion-toggle [(ngModel)]="reclamacion.spotify" name="spotify">Spotify</ion-toggle>
       </ion-item>
       <ion-item>
-        <ion-toggle [(ngModel)]="reclamacion.apple" name="apple">Apple Music</ion-toggle>
+        <ion-toggle [(ngModel)]="reclamacion.applemusic" name="apple">Apple Music</ion-toggle>
       </ion-item>
       <ion-item>
         <ion-toggle [(ngModel)]="reclamacion.amazon" name="amazon">Amazon Music</ion-toggle>
-      </ion-item>
+      </ion-item>      
     </ion-list>
 
     <!-- OTROS FORMATOS -->
@@ -123,17 +123,14 @@
     </ion-item-divider> 
     <ion-list>
       <ion-item>
-        <ion-toggle [(ngModel)]="reclamacion.cd" name="cd">CD</ion-toggle>
-      </ion-item>
-      <ion-item>
-        <ion-toggle [(ngModel)]="reclamacion.cassette" name="cassette">Cassette</ion-toggle>
-      </ion-item>
-      <ion-item>
         <ion-toggle [(ngModel)]="reclamacion.video" name="video">Video</ion-toggle>
       </ion-item>
       <ion-item>
         <ion-toggle [(ngModel)]="reclamacion.otros" name="otros">Otros</ion-toggle>
       </ion-item>    
+      <ion-item *ngIf="reclamacion.otros">
+        <ion-input [(ngModel)]="reclamacion.descripcion_otro" name="descripcion_otro" placeholder="Describa el otro medio"></ion-input>
+      </ion-item>
     </ion-list>
 
     <!-- MENSAJE -->

@@ -21,6 +21,18 @@ export const routes: Routes = [
       import('./pages/home/home.component').then(m => m.HomePage),
   },
   {
+    path: 'monitoreos',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/monitoreos/monitoreos.component').then(m => m.MonitoreosComponent),
+  },  
+  {
+    path: 'monitoreos/:id/details',
+    canActivate: [authGuard],
+    loadComponent: () => 
+      import('./pages/monitoreos-detail/monitoreos-detail.component').then(m => m.MonitoreosDetailComponent),
+  },   
+  {
     path: 'obras',
     canActivate: [authGuard],
     loadComponent: () =>
@@ -44,6 +56,24 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/obras-form/obras-form.component').then(m => m.ObrasFormComponent),
   },
+  {
+    path: 'prestamos',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/prestamos/prestamos.component').then(m => m.PrestamosComponent),
+  },
+  {
+    path: 'prestamos/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/prestamos-form/prestamos-form.component').then(m => m.PrestamosFormComponent),
+  }, 
+  {
+    path: 'prestamos/:id/details',
+    canActivate: [authGuard],
+    loadComponent: () => 
+      import('./pages/prestamos-detail/prestamos-detail.component').then(m => m.PrestamosDetailComponent),
+  },   
   {
     path: 'repartos',
     canActivate: [authGuard],

@@ -3,9 +3,9 @@
 <ng-container *ngIf="ayudas; else loading">
 	<ion-content class="ion-padding" color="light">
 		<ion-button expand="block" routerLink="/ayudas/new" color="primary">
-			➕ Solicitar Ayuda
+			➕ Solicitar Previsi&oacute;n Social
 		</ion-button>
-		<h3 class="ion-padding-top">Mis Ayudas Solicitadas</h3>
+		<h3 class="ion-padding-top">Mis Solicitudes</h3>
 		<!-- Botón para mostrar u ocultar los filtros -->
 		<ion-button expand="block" fill="outline" (click)="mostrarFiltros = !mostrarFiltros">
 			<ion-icon *ngIf="mostrarFiltros" slot="start" name="funnel-outline"></ion-icon>
@@ -17,7 +17,7 @@
 		<div *ngIf="mostrarFiltros" class="ion-padding">	
 			<h4 class="">Filtros</h4>
 			<ion-item>
-				<ion-label position="stacked">Tipo de Ayuda</ion-label>
+				<ion-label position="stacked">Tipo de Previsi&oacute;n Social</ion-label>
 			    <ion-select [(ngModel)]="filtros.tip_ayuda" name="tip_ayuda" interface="popover" (ionChange)="filtrarAyudas()" placeholder="Selecciona una opción">
 			      <ion-select-option *ngFor="let tipo of tiposAyuda" [value]="tipo.id">{{ tipo.nombre }}</ion-select-option>
 			    </ion-select>
@@ -63,7 +63,8 @@
 			<ion-item *ngFor="let ayuda of ayudasFiltradas; let i = index" lines="full" routerLink="/ayudas/{{ayuda.pre_socialid
 }}/details" detail="true">
 				<ion-label>
-					<h2><strong>{{ tipoAyudaTextoMap[+ayuda.tip_ayuda] }}</strong></h2>
+					<h2><strong>Solicitud No. {{ ayuda.pre_socialid }}</strong></h2>
+					<p><strong>Tipo:</strong> {{ tipoAyudaTextoMap[+ayuda.tip_ayuda] }}</p>
 					<p><small>Fecha: {{ ayuda.created_at | date:'longDate' }}</small></p>
 				</ion-label>
 
@@ -79,7 +80,7 @@
 
 		<ng-template #sinAyudas>
 			<ion-text color="medium">
-				<p class="ion-text-center">No tiene solicitudes de ayuda registradas.</p>
+				<p class="ion-text-center">No tiene solicitudes de previsi&oacute;n social registradas.</p>
 			</ion-text>
 		</ng-template>
 	</ion-content>
