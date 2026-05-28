@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, NavController, ToastController, LoadingController } from '@ionic/angular';
+import { IonicModule, AlertController, NavController, ToastController, LoadingController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfiguracionService, PerfilUsuario } from '../../services/configuracion.service';
@@ -33,6 +33,7 @@ export class PerfilComponent implements OnInit {
 
   constructor(
     private configuracionService: ConfiguracionService,
+    private alertController: AlertController,
     private toastCtrl: ToastController,
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
@@ -247,6 +248,54 @@ export class PerfilComponent implements OnInit {
     } finally {
       await loading.dismiss();
     }
+  }
+
+  async confirmarEliminarCuenta() {
+    const alert = await this.alertController.create({
+      header: 'Eliminar cuenta',
+      message: 'Esta acción eliminará tu acceso a SGACEDOM App y la información asociada a tu cuenta dentro de la aplicación. Algunos registros institucionales o legales podrían conservarse según las obligaciones de SGACEDOM. ¿Deseas continuar?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar cuenta',
+          role: 'destructive',
+          handler: () => {
+            this.eliminarCuenta();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  eliminarCuenta() {
+    this.perfilService.deleteAccount().subscribe({
+      next: async () => {
+        const toast = await this.toastCtrl.create({
+          message: 'Tu cuenta ha sido eliminada correctamente.',
+          duration: 2500,
+          color: 'success'
+        });
+
+        await toast.present();
+
+        localStorage.clear();
+        this.navCtrl.navigateRoot('/login');
+      },
+      error: async () => {
+        const toast = await this.toastCtrl.create({
+          message: 'No fue posible eliminar la cuenta. Inténtalo nuevamente o contacta a SGACEDOM.',
+          duration: 3000,
+          color: 'danger'
+        });
+
+        await toast.present();
+      }
+    });
   }
 
   onFotoSelected(event: Event) {

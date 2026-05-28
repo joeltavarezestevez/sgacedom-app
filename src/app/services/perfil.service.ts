@@ -34,5 +34,8 @@ export class PerfilService {
   changePassword(payload: { currentPassword: string; newPassword: string; confirmPassword: string; }) {
     return this.http.put(`${this.baseUrl}/password`, payload);
   }
-
+  
+  deleteAccount() {
+    return this.http.delete(`${this.baseUrl}/account`);
+  }
 }
