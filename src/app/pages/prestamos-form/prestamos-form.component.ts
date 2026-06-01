@@ -7,7 +7,7 @@ import { SgHeaderComponent } from '../../components/sg-header/sg-header.componen
 import { PrestamoService } from '../../services/prestamos.service';
 import { firstValueFrom } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { checkmarkOutline, closeOutline } from 'ionicons/icons';
+import { checkmarkOutline, closeOutline, attachOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-prestamos-form',
@@ -31,7 +31,8 @@ export class PrestamosFormComponent implements OnInit {
   ) {
     addIcons({
       'checkmark-outline': checkmarkOutline,
-      'close-outline': closeOutline
+      'close-outline': closeOutline,
+      'attach-outline': attachOutline
     });     
   }
 

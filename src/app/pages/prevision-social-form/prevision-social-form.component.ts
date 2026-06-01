@@ -7,7 +7,7 @@ import { SgHeaderComponent } from '../../components/sg-header/sg-header.componen
 import { PrevisionSocialService } from '../../services/prevision-social.service';
 import { firstValueFrom } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { checkmarkOutline, closeOutline } from 'ionicons/icons';
+import { checkmarkOutline, closeOutline, attachOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-prevision-social-form',
@@ -32,7 +32,8 @@ export class PrevisionSocialFormComponent implements OnInit {
   ) {
     addIcons({
       'checkmark-outline': checkmarkOutline,
-      'close-outline': closeOutline
+      'close-outline': closeOutline,
+      'attach-outline': attachOutline
     });     
   }
 
