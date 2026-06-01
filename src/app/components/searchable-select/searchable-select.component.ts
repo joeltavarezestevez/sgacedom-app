@@ -3,6 +3,8 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Output, EventEmitter } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { checkmarkOutline } from 'ionicons/icons';
 
 @Component({
   standalone: true,
@@ -40,6 +42,12 @@ export class SearchableSelectComponent implements OnInit {
   selectedSingle: any = null;
   selectedMultiple: any[] = [];
 
+  constructor() {
+    addIcons({
+      'checkmark-outline': checkmarkOutline,
+    });
+  }
+
   ngOnInit() {
     this.applyFilter();
   }
@@ -71,6 +79,14 @@ export class SearchableSelectComponent implements OnInit {
 
   onSingleSelect() {
     this.valueChange.emit(this.selectedSingle);
+    this.isOpen = false;
+  }
+
+  selectSingle(item: any) {
+    if (item === null || item === undefined) return;
+
+    this.selectedSingle = item;
+    this.valueChange.emit(item);
     this.isOpen = false;
   }
 
