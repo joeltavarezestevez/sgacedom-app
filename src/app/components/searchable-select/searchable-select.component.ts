@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Output, EventEmitter } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { checkmarkOutline } from 'ionicons/icons';
 
@@ -15,32 +14,34 @@ import { checkmarkOutline } from 'ionicons/icons';
 })
 export class SearchableSelectComponent implements OnInit {
   @Input() title = 'Buscar';
-  @Output() valueChange = new EventEmitter<any>();
-  private _data: any[] = [];
-  safeData: any[] = [];
-  filteredData: any[] = [];
-
-  @Input() set data(value: any[] | null | undefined) {
-    const arr = Array.isArray(value) ? value : [];
-    this._data = arr.filter((x) => x !== null && x !== undefined);
-    this.safeData = [...this._data];
-    this.applyFilter(); // 🔎 refresca filtro si cambian los datos
-  }
-  get data(): any[] {
-    return this._data;
-  }
-
   @Input() multiple = false;
   @Input() itemTextField = 'name';
 
-  isOpen = false;
+  @Output() valueChange = new EventEmitter<any>();
 
-  // 🔎 Search
+  private _data: any[] = [];
+  private selecting = false;
+
+  safeData: any[] = [];
+  filteredData: any[] = [];
+
+  isOpen = false;
   searchText = '';
 
-  // Selección
   selectedSingle: any = null;
   selectedMultiple: any[] = [];
+
+  @Input() set data(value: any[] | null | undefined) {
+    const arr = Array.isArray(value) ? value : [];
+
+    this._data = arr.filter((x) => x !== null && x !== undefined);
+    this.safeData = [...this._data];
+    this.applyFilter();
+  }
+
+  get data(): any[] {
+    return this._data;
+  }
 
   constructor() {
     addIcons({
@@ -54,22 +55,22 @@ export class SearchableSelectComponent implements OnInit {
 
   open() {
     this.isOpen = true;
-    // opcional: limpiar búsqueda al abrir
-    // this.searchText = '';
+    this.searchText = '';
     this.applyFilter();
   }
 
   cancel() {
     this.isOpen = false;
+    this.selecting = false;
   }
 
   confirm() {
-    // para multiple
     if (this.multiple) {
       this.valueChange.emit(this.selectedMultiple);
-    } else {
+    } else if (this.selectedSingle) {
       this.valueChange.emit(this.selectedSingle);
     }
+
     this.isOpen = false;
   }
 
@@ -77,21 +78,42 @@ export class SearchableSelectComponent implements OnInit {
     return index;
   }
 
-  onSingleSelect() {
-    this.valueChange.emit(this.selectedSingle);
-    this.isOpen = false;
+  onSearchChange() {
+    this.applyFilter();
   }
 
   selectSingle(item: any) {
-    if (item === null || item === undefined) return;
+    if (item === null || item === undefined || this.selecting) return;
 
+    this.selecting = true;
     this.selectedSingle = item;
     this.valueChange.emit(item);
-    this.isOpen = false;
+
+    setTimeout(() => {
+      this.isOpen = false;
+      this.selecting = false;
+    }, 150);
   }
 
-  onSearchChange() {
-    this.applyFilter();
+  toggleItem(item: any) {
+    if (item === null || item === undefined) return;
+
+    if (this.multiple) {
+      const idx = this.selectedMultiple.indexOf(item);
+      if (idx >= 0) {
+        this.selectedMultiple.splice(idx, 1);
+      } else {
+        this.selectedMultiple.push(item);
+      }
+    } else {
+      this.selectSingle(item);
+    }
+  }
+
+  isSelected(item: any): boolean {
+    return this.multiple
+      ? this.selectedMultiple.includes(item)
+      : this.selectedSingle === item;
   }
 
   private applyFilter() {
@@ -115,7 +137,10 @@ export class SearchableSelectComponent implements OnInit {
     }
 
     const field = (this.itemTextField || 'name').trim();
-    const valueFromPath = field.split('.').reduce((acc: any, key: string) => acc?.[key], item);
+
+    const valueFromPath = field
+      .split('.')
+      .reduce((acc: any, key: string) => acc?.[key], item);
 
     const val =
       valueFromPath ??
@@ -131,26 +156,6 @@ export class SearchableSelectComponent implements OnInit {
     return val === null || val === undefined ? '' : String(val);
   }
 
-  isSelected(item: any): boolean {
-    return this.multiple
-      ? this.selectedMultiple.includes(item)
-      : this.selectedSingle === item;
-  }
-
-  toggleItem(item: any) {
-    if (item === null || item === undefined) return;
-
-    if (this.multiple) {
-      const idx = this.selectedMultiple.indexOf(item);
-      if (idx >= 0) this.selectedMultiple.splice(idx, 1);
-      else this.selectedMultiple.push(item);
-    } else {
-      // si es single, el radio-group lo maneja, pero por si cliquean el item
-      this.selectedSingle = item;
-    }
-  }
-
-  // Para leer desde el padre: select.value
   get value(): any {
     return this.multiple ? this.selectedMultiple : this.selectedSingle;
   }

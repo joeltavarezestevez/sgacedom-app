@@ -27,21 +27,23 @@
         <ion-label position="stacked">Int&eacute;rprete(s)</ion-label>
         <ion-input [(ngModel)]="obra.interpretes" name="interpretes" placeholder="Intérprete(s)"></ion-input>
       </ion-item>      
-      <ion-item (click)="select.open()">
+      <ion-item button detail="true" (click)="select.open()">
         <ion-label position="stacked">
           Género <ion-text color="danger">*</ion-text>
         </ion-label>
-        <app-searchable-select
-          title="Seleccione un género"
-          [data]="generos"
-          itemTextField="nombre"
-          (valueChange)="onGeneroSelected($event)"
-          #select>
-        </app-searchable-select>
+
         <ion-text>
           {{ obra.genero || 'Seleccione una opción' }}
         </ion-text>
       </ion-item>
+
+      <app-searchable-select
+        title="Seleccione un género"
+        [data]="generos"
+        itemTextField="nombre"
+        (valueChange)="onGeneroSelected($event)"
+        #select>
+      </app-searchable-select>
       <ion-item *ngIf="obra.genero == 'Otro'">
         <ion-label position="stacked">Describa el genero <ion-text color="danger">*</ion-text></ion-label>
         <ion-input [(ngModel)]="obra.genero_otro_descripcion" name="genero_otro_descripcion" placeholder="Otro Genero" *ngIf="obra.genero == 'Otro'" required></ion-input>
@@ -62,24 +64,26 @@
           <ion-select-option *ngFor="let l of lugaresPublicacion" [value]="l.value"> {{ l.label }} </ion-select-option>
         </ion-select>
       </ion-item>      
-      <ion-item (click)="selEditora.open()">
+      <ion-item button detail="true" (click)="selEditora.open()">
         <ion-label position="stacked">Editora</ion-label>
-        <app-searchable-select
-          #selEditora
-          title="Seleccione una editora"
-          [data]="editoras"
-          itemTextField="nombre"
-          (valueChange)="onEditoraSelected($event)">
-        </app-searchable-select>
 
         <ion-text>
           {{ obra.editora_nombre || 'Seleccione una opción' }}
         </ion-text>
-      </ion-item>      
+      </ion-item>
+
+      <app-searchable-select
+        #selEditora
+        title="Seleccione una editora"
+        [data]="editoras"
+        itemTextField="nombre"
+        (valueChange)="onEditoraSelected($event)">
+      </app-searchable-select>      
       <ion-item *ngIf="obra.editora_id == 0">
         <ion-label position="stacked">Escriba el nombre de la editora <ion-text color="danger">*</ion-text></ion-label>
         <ion-input [(ngModel)]="obra.editora_otra_descripcion" name="editora_otra_descripcion" placeholder="Otra Editora" *ngIf="obra.editora_id == 0" required></ion-input>
-      </ion-item>      
+      </ion-item>
+      <br>    
       <ion-list>
         <ion-item-divider color="light">
           <ion-label><strong>Co-autores</strong></ion-label>

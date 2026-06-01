@@ -1,19 +1,22 @@
-<ion-modal [isOpen]="isOpen" (didDismiss)="cancel()">
+<ion-modal
+  [isOpen]="isOpen"
+  [keepContentsMounted]="true"
+  (didDismiss)="cancel()">
+
   <ng-template>
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button (click)="cancel()">Cancelar</ion-button>
+          <ion-button type="button" (click)="cancel()">Cancelar</ion-button>
         </ion-buttons>
 
         <ion-title>{{ title }}</ion-title>
 
-        <ion-buttons slot="end">
-          <ion-button (click)="confirm()">Seleccionar</ion-button>
+        <ion-buttons slot="end" *ngIf="multiple">
+          <ion-button type="button" (click)="confirm()">Seleccionar</ion-button>
         </ion-buttons>
       </ion-toolbar>
 
-      <!-- 🔎 Searchbar -->
       <ion-toolbar>
         <ion-searchbar
           [(ngModel)]="searchText"
@@ -31,37 +34,40 @@
         <ng-container *ngIf="multiple; else singleTpl">
           <ion-item
             button
+            detail="false"
             *ngFor="let item of filteredData; trackBy: trackByIndex"
             (click)="toggleItem(item)">
+
             <ion-label>
               {{ getLabel(item) || '—' }}
             </ion-label>
-            <ion-checkbox slot="end" [checked]="isSelected(item)"></ion-checkbox>
+
+            <ion-checkbox
+              slot="end"
+              [checked]="isSelected(item)">
+            </ion-checkbox>
           </ion-item>
         </ng-container>
 
         <!-- SINGLE -->
         <ng-template #singleTpl>
-          <ion-radio-group
-            [(ngModel)]="selectedSingle"
-            (ionChange)="onSingleSelect()">
+          <ion-item
+            button
+            detail="false"
+            tappable
+            *ngFor="let item of filteredData; trackBy: trackByIndex"
+            (pointerup)="selectSingle(item)">
 
-            <ion-item
-              button
-              *ngFor="let item of filteredData; trackBy: trackByIndex">
+            <ion-label>
+              {{ getLabel(item) || '—' }}
+            </ion-label>
 
-              <ion-label>
-                {{ getLabel(item) || '—' }}
-              </ion-label>
-
-              <ion-radio
-                slot="end"
-                [value]="item">
-              </ion-radio>
-
-            </ion-item>
-
-          </ion-radio-group>
+            <ion-icon
+              *ngIf="isSelected(item)"
+              name="checkmark-outline"
+              slot="end">
+            </ion-icon>
+          </ion-item>
         </ng-template>
 
         <ion-item *ngIf="filteredData.length === 0">
