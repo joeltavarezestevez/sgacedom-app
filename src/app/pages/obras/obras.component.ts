@@ -7,7 +7,7 @@ import { ObrasService } from '../../services/obras.service';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { funnel, funnelOutline } from 'ionicons/icons';
+import { funnel, funnelOutline, addCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-obras',
@@ -28,7 +28,8 @@ export class ObrasComponent implements OnInit {
     fechaHasta: ''    
   };
     
-  constructor(private obrasService: ObrasService) { addIcons({funnel, funnelOutline }); }
+  constructor(private obrasService: ObrasService) { 
+    addIcons({funnel, funnelOutline, addCircleOutline }); }
 
   ngOnInit() {
     this.cargarObras();

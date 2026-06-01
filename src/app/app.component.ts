@@ -6,6 +6,21 @@ import { IonicModule, Platform } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
 import { AuthService } from './services/auth.service';
 import OneSignal from 'onesignal-cordova-plugin';
+import { addIcons } from 'ionicons';
+import {
+  personOutline,
+  newspaperOutline,
+  radioOutline,
+  musicalNotesOutline,
+  cashOutline,
+  documentTextOutline,
+  businessOutline,
+  heartOutline,
+  locationOutline,
+  helpCircleOutline,
+  mailOutline,
+  logOutOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +40,20 @@ export class AppComponent implements OnInit {
     private menuCtrl: MenuController,
     private platform: Platform
     ) {
+    addIcons({
+      'person-outline': personOutline,
+      'newspaper-outline': newspaperOutline,
+      'radio-outline': radioOutline,
+      'musical-notes-outline': musicalNotesOutline,
+      'cash-outline': cashOutline,
+      'document-text-outline': documentTextOutline,
+      'business-outline': businessOutline,
+      'heart-outline': heartOutline,
+      'location-outline': locationOutline,
+      'help-circle-outline': helpCircleOutline,
+      'mail-outline': mailOutline,
+      'log-out-outline': logOutOutline,
+    });    
     this.currentRoute = this.router.url;
 
     this.platform.ready().then(() => {

@@ -7,7 +7,7 @@ import { ReporteEventoService } from '../../services/reporte-evento.service';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { funnel, funnelOutline } from 'ionicons/icons';
+import { funnel, funnelOutline, addCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-reporte-eventos',
@@ -30,7 +30,7 @@ export class ReporteEventosComponent implements OnInit {
   };  
 
   constructor(private reporteEventoService: ReporteEventoService) {
-    addIcons({funnel, funnelOutline });
+    addIcons({funnel, funnelOutline, addCircleOutline });
   }
 
   ngOnInit() {

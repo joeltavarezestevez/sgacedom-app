@@ -7,7 +7,7 @@ import { PrestamoService } from '../../services/prestamos.service';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { funnel, funnelOutline } from 'ionicons/icons';
+import { funnel, funnelOutline, addCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-prestamo',
@@ -27,7 +27,7 @@ export class PrestamosComponent {
   };
 
   constructor(private prestamoService: PrestamoService) {
-    addIcons({funnel, funnelOutline });
+    addIcons({funnel, funnelOutline, addCircleOutline });
   }
 
   ngOnInit() {

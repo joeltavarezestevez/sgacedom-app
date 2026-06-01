@@ -8,7 +8,7 @@ import { ReclamacionService } from '../../services/reclamacion.service';
 import { CatalogsService } from '../../services/catalogs.service';
 import { AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { funnel, funnelOutline } from 'ionicons/icons';
+import { funnel, funnelOutline, addCircleOutline } from 'ionicons/icons';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -37,7 +37,7 @@ export class ReclamacionesComponent implements OnInit {
     private toastCtrl: ToastController,
     private alertCtrl: AlertController
   ) {
-    addIcons({funnel, funnelOutline});
+    addIcons({funnel, funnelOutline, addCircleOutline });
   }
 
   async ngOnInit() {

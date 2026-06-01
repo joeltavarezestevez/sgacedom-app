@@ -6,7 +6,7 @@ import { SgHeaderComponent } from '../../components/sg-header/sg-header.componen
 import { NavController } from '@ionic/angular';
 import { RepartosService } from '../../services/repartos.service';
 import { addIcons } from 'ionicons';
-import { documentTextOutline, attachOutline, arrowBackOutline, calendarOutline } from 'ionicons/icons';
+import { documentTextOutline, attachOutline, arrowBackOutline, calendarOutline,  cashOutline, addCircleOutline } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';
 import { Browser } from '@capacitor/browser';
 import { Filesystem, Directory } from '@capacitor/filesystem';
@@ -27,7 +27,9 @@ export class RepartosDetailComponent implements OnInit {
       'document-text-outline': documentTextOutline,
       'attach-outline': attachOutline,    
       'arrow-back-outline': arrowBackOutline,
-      'calendar-outline': calendarOutline
+      'calendar-outline': calendarOutline,
+      'cash-outline': cashOutline,
+      'add-circle-outline': addCircleOutline      
     });    
   }
 

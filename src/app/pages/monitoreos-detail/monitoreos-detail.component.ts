@@ -27,7 +27,7 @@ export class MonitoreosDetailComponent implements OnInit {
       'document-text-outline': documentTextOutline,
       'attach-outline': attachOutline,    
       'arrow-back-outline': arrowBackOutline,
-      'calendar-outline': calendarOutline
+      'calendar-outline': calendarOutline    
     });    
   }
 

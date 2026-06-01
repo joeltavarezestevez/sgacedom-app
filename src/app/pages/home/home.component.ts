@@ -4,6 +4,8 @@ import { CommonModule, NgFor } from '@angular/common';
 import { NewsService, WordpressPost } from '../../services/news.service';
 import { SgHeaderComponent } from '../../components/sg-header/sg-header.component';
 import { Browser } from '@capacitor/browser';
+import { addIcons } from 'ionicons';
+import { newspaperOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +19,11 @@ export class HomePage implements OnInit {
   posts: WordpressPost[] = [];
   loading = false;
 
-  constructor(private newsService: NewsService) {}
+  constructor(private newsService: NewsService) {
+    addIcons({
+    'newspaper-outline': newspaperOutline
+    });
+  }
 
   ngOnInit() {
     this.loading = true;

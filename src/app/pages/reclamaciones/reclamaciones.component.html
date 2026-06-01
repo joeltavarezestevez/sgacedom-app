@@ -2,7 +2,8 @@
 <ng-container *ngIf="reclamaciones; else loading">
 	<ion-content class="ion-padding" color="light">
 		<ion-button expand="block" routerLink="/reclamaciones/new" color="primary">
-			➕ Registrar Reclamaci&oacute;n
+			<ion-icon name="add-circle-outline" slot="start"></ion-icon>
+			Registrar Reclamaci&oacute;n
 		</ion-button>
 		<h3 class="ion-padding-top">Mis Reclamaciones Registradas</h3>
 		<!-- Botón para mostrar u ocultar los filtros -->

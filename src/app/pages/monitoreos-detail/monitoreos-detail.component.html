@@ -40,7 +40,13 @@
             </ng-container>
           </ion-thumbnail>
           <ion-label>
-            <h3>📄 Documento</h3>
+            <h3>
+              <ion-icon
+                name="document-text-outline"
+                style="vertical-align: middle; margin-right: 6px;">
+              </ion-icon>
+              Documento
+            </h3>
             <p *ngIf="isImage(monitoreo.archivo_url)">Ver Imagen</p>
             <p *ngIf="isPdf(monitoreo.archivo_url)">Ver Documento PDF</p>
             <p *ngIf="!isImage(monitoreo.archivo_url) && !isPdf(monitoreo.archivo_url)">Ver Documento</p>

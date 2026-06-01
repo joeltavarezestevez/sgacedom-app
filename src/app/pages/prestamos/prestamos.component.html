@@ -3,7 +3,8 @@
 <ng-container *ngIf="prestamos; else loading">
 	<ion-content class="ion-padding" color="light">
 		<ion-button expand="block" routerLink="/prestamos/new" color="primary">
-			➕ Solicitar Pr&eacute;stamo
+			<ion-icon name="add-circle-outline" slot="start"></ion-icon>
+			Solicitar Pr&eacute;stamo
 		</ion-button>
 		<h3 class="ion-padding-top">Mis Solicitudes de Préstamos</h3>
 		<!-- Botón para mostrar u ocultar los filtros -->

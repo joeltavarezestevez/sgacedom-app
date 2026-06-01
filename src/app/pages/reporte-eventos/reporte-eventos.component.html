@@ -2,7 +2,8 @@
 <ng-container *ngIf="eventos; else loading">
 	<ion-content class="ion-padding" color="light">
 		<ion-button expand="block" routerLink="/reporte-eventos/new" color="primary">
-			➕ Reportar Evento
+			<ion-icon name="add-circle-outline" slot="start"></ion-icon>
+			Reportar Evento
 		</ion-button>
 		<h3 class="ion-padding-top">Mis Eventos Reportados</h3>
 		<!-- Botón para mostrar u ocultar los filtros -->

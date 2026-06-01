@@ -4,6 +4,13 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { Browser } from '@capacitor/browser';
+import { addIcons } from 'ionicons';
+import {
+  helpCircleOutline,
+  chatbubbleEllipsesOutline,
+  callOutline,
+  logoWhatsapp 
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-faq',
@@ -14,7 +21,14 @@ import { Browser } from '@capacitor/browser';
 })
 export class FaqComponent  implements OnInit {
 
-  constructor() { }
+  constructor() {
+    addIcons({
+      'help-circle-outline': helpCircleOutline,
+      'chatbubble-ellipses-outline': chatbubbleEllipsesOutline,
+      'call-outline': callOutline,
+      'logo-whatsapp': logoWhatsapp
+    });
+  }
 
   ngOnInit() {}
 

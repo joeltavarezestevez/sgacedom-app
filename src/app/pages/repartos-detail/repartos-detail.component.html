@@ -40,7 +40,10 @@
             </ng-container>
           </ion-thumbnail>
           <ion-label>
-            <h3>📄 Liquidación</h3>
+            <h3>
+              <ion-icon name="document-text-outline"></ion-icon>
+              Liquidación
+            </h3>
             <p *ngIf="isImage(reparto.liquidacion)">Ver Imagen</p>
             <p *ngIf="isPdf(reparto.liquidacion)">Ver Documento PDF</p>
             <p *ngIf="!isImage(reparto.liquidacion) && !isPdf(reparto.liquidacion)">Ver Documento</p>
@@ -68,7 +71,10 @@
             </ng-container>
           </ion-thumbnail>
           <ion-label>
-            <h3>💸 Descuento</h3>
+            <h3>
+              <ion-icon name="cash-outline"></ion-icon>
+              Descuento
+            </h3>
             <p *ngIf="isImage(reparto.descuento)">Ver Imagen</p>
             <p *ngIf="isPdf(reparto.descuento)">Ver Documento PDF</p>
             <p *ngIf="!isImage(reparto.descuento) && !isPdf(reparto.descuento)">Ver Documento</p>
@@ -98,7 +104,10 @@
           </ion-thumbnail>
 
           <ion-label>
-            <h3>➕ Adicional</h3>
+            <h3>
+              <ion-icon name="add-circle-outline"></ion-icon>
+              Adicional
+            </h3>
             <p *ngIf="isImage(reparto.adicional)">Ver Imagen</p>
             <p *ngIf="isPdf(reparto.adicional)">Ver Documento PDF</p>
             <p *ngIf="!isImage(reparto.adicional) && !isPdf(reparto.adicional)">Ver Documento</p>

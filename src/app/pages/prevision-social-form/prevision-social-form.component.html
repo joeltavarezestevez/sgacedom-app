@@ -1,8 +1,8 @@
-<sg-header [title]="isEdit ? 'Editar Solicitud' : 'Solicitar Ayuda'"></sg-header>
+<sg-header [title]="isEdit ? 'Editar Solicitud' : 'Solicitar Previsión Social'"></sg-header>
 
 <ion-content class="ion-padding">
   <ion-text>
-    <h2>Formulario de Ayuda</h2>
+    <h2>Formulario de Previsi&oacute;n Social</h2>
     <ion-chip color="secondary">
       Este formulario es para solicitar asistencia social por parte de SGACEDOM. Complete los campos requeridos.
     </ion-chip>
@@ -12,16 +12,16 @@
 <form #ayudaForm="ngForm" (ngSubmit)="onSubmit()">
     <ion-list lines="full">
   <ion-item-divider color="light" class="ion-margin-top">
-    <ion-label><strong>Tipo de ayuda solicitada <ion-text color="danger">*</ion-text></strong></ion-label>
+    <ion-label><strong>Tipo de previsi&oacute;n solicitada <ion-text color="danger">*</ion-text></strong></ion-label>
   </ion-item-divider>
   <ion-item>
     <ion-select [(ngModel)]="prevision.tip_ayuda" name="tip_ayuda" placeholder="Selecciona una opción">
       <ion-select-option *ngFor="let tipo of tiposAyuda; let i = index" [value]="i+1">{{ tipo }}</ion-select-option>
     </ion-select>
   </ion-item>
-  <ion-item *ngIf="prevision.tip_ayuda === 4">
-    <ion-label position="floating"><strong>Describa el tipo de ayuda</strong></ion-label>
-    <ion-input [(ngModel)]="prevision.desc_otros" name="desc_otros" required></ion-input>
+  <ion-item *ngIf="prevision.tip_ayuda === 3">
+    <ion-label position="stacked"><strong>Describa el tipo de previsi&oacute;n</strong></ion-label>
+    <ion-input [(ngModel)]="prevision.desc_otros" name="desc_otros" placeholder="Tipo de previsión" required></ion-input>
   </ion-item>
 
 

@@ -2,7 +2,8 @@
 <ng-container *ngIf="obras; else loading">
 	<ion-content class="ion-padding" color="light">
 		<ion-button expand="block" routerLink="/obras/new" color="primary">
-			➕ Registrar Obra
+		  <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+		  Registrar Obra
 		</ion-button>
 		<h3 class="ion-padding-top">Mis Obras Declaradas</h3>
 		<!-- Botón para mostrar u ocultar los filtros -->

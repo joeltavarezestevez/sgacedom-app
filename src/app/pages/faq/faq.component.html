@@ -1,7 +1,10 @@
 <sg-header title="Preguntas Frecuentes"></sg-header>
 
 <ion-content class="ion-padding">
-<h3>Preguntas Frecuentes</h3>
+<h3>
+  <ion-icon name="help-circle-outline" style="vertical-align: middle; margin-right: 6px;"></ion-icon>
+  Preguntas Frecuentes
+</h3>
   <ion-accordion-group class="ion-padding-top">
     <ion-accordion *ngFor="let item of faqs">
       <ion-item slot="header">
@@ -15,11 +18,15 @@
 
   <ion-card class="contact-card">
     <ion-card-header>
-      <ion-card-title>¿Aún tienes preguntas?</ion-card-title>
+      <ion-card-title>
+        <ion-icon name="chatbubble-ellipses-outline" style="vertical-align: middle; margin-right: 6px;"></ion-icon>
+        ¿Aún tienes preguntas?
+      </ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <p>Contáctanos por cualquiera de los medios disponibles:</p>
       <ion-button expand="block" fill="outline" color="primary" href="tel:8096896132">
+        <ion-icon slot="start" name="call-outline"></ion-icon>
         Llamar al 809-689-6132 Ext. 233
       </ion-button>
       <ion-button expand="block" fill="outline" color="success" (click)="openWhatsapp()">

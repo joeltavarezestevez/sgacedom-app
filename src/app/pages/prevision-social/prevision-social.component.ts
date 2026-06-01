@@ -7,7 +7,7 @@ import { PrevisionSocialService } from '../../services/prevision-social.service'
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { funnel, funnelOutline } from 'ionicons/icons';
+import { funnel, funnelOutline, addCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-prevision-social',
@@ -34,7 +34,7 @@ export class PrevisionSocialComponent {
   };
 
   constructor(private previsionService: PrevisionSocialService) {
-    addIcons({funnel, funnelOutline });
+    addIcons({funnel, funnelOutline, addCircleOutline });
   }
 
   ngOnInit() {
